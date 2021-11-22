@@ -53,6 +53,7 @@ public class Individual {
 //Memorizziamo e otteniamo la fitness di un individuo
 	 
 	public void setFitness(double fitness) {
+            
 		this.fitness = fitness;
 	}
 	
