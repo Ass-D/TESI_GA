@@ -54,8 +54,7 @@ public class GeneticAlgorithm {
         }
         return somma;
     }
-    
-    
+
     private double getSommaIndicePriorita(int[] indexes, Ordine[] ordini) {
         double somma = 0;
         for (int index : indexes) {
@@ -67,18 +66,15 @@ public class GeneticAlgorithm {
 //Calcoliamo la fitness per un individuo
     public double calcFitness(Individual individual, double areaFoglio, double alpha, double beta, Ordine[] ordini) throws SoluzioneImpossibileException {
 
-        int[] vettore = individual.getvettore();
-
+        //  int[] vettore = individual.getvettore();
         int[] nessunFoglio = individual.getOrdiniByIndex(0);
         int[] foglio1 = individual.getOrdiniByIndex(1);
         int[] foglio2 = individual.getOrdiniByIndex(2);
 
-        int areaTotaleFoglio1 = 0;
-
         double areaOrdiniFoglio1 = calculateAreaOrdiniByIndex(foglio1, ordini);
         double areaOrdiniFoglio2 = calculateAreaOrdiniByIndex(foglio2, ordini);
-        
-        if(areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio){
+
+        if (areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio) {
             throw new SoluzioneImpossibileException("La somma delle aree degli ordini non può eccedere l'area del foglio");
         }
 
@@ -89,180 +85,24 @@ public class GeneticAlgorithm {
 
         double minDueDateFoglio1 = calculateMinExpirationDate(foglio1, ordini);
         double minDueDateFoglio2 = calculateMinExpirationDate(foglio2, ordini);
-        
+
         double tempoElaborazioneFoglio1 = getSommaTempoRetinatura(foglio1, ordini);
         double tempoElaborazioneFoglio2 = getSommaTempoRetinatura(foglio2, ordini);
-        
+
         double c1 = tempoElaborazioneFoglio1;
         double c2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
-        
+
         double ritardoFoglio1 = c1 - minDueDateFoglio1 >= 0 ? c1 - minDueDateFoglio1 : 0;
         double ritardoFoglio2 = c2 - minDueDateFoglio2 >= 0 ? c2 - minDueDateFoglio2 : 0;
-        
+
         double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini);
         double sommatoriaIndicePriority2 = getSommaIndicePriorita(foglio2, ordini);
-        
-        double costoPenalty = beta*(ritardoFoglio1*sommatoriaIndicePriority1+ ritardoFoglio2*sommatoriaIndicePriority2);
-        
-        
-        
-        
-        return costoSpreco + costoPenalty;
-        
-        
-        
 
-//
-////Suddividiamo il vettore individuo in due parti, una per ogni AGV
-//        int[] agv1 = new int[vettore.length];
-//        for (int k = 0; k < vettore.length; k++) {
-//            if (vettore[k] != 3 && vettore[k] != 4) {
-//                agv1[k] = vettore[k];
-//            }
-//        }
-//
-//        int[] agv2 = new int[vettore.length];
-//        for (int m = 0; m < vettore.length; m++) {
-//            if (vettore[m] != 1 && vettore[m] != 2) {
-//                agv2[m] = vettore[m];
-//            }
-//        }
-//
-////Calcoliamo il tempo figurato per il primo AGV
-//        double[] tf1 = new double[vettore.length]; //tempo figurato1 AGV1
-//        double cumulata1 = 0;
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv1[i] == 1) {
-//                tf1[i] = tp[i] * w[i] + cumulata1;
-//                cumulata1 = tf1[i];
-//            }
-//        }
-//
-//        double[] tf2 = new double[vettore.length]; //tempo figurato2 AGV1
-//        double cumulata2 = 0;
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv1[i] == 2) {
-//                tf2[i] = tp[i] * w[i] + cumulata2;
-//                cumulata2 = tf2[i];
-//            }
-//        }
-//
-////Calcoliamo la proabilit� di guasto per il primo AGV
-//        double[] pg1 = new double[vettore.length]; //prob di guasto1 AGV1
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv1[i] == 1) {
-//                pg1[i] = ((Math.pow(alpha, tf1[i] / MTBF)) - (Math.pow((alpha - 1), tf1[i] / MTBF)));
-//            }
-//        }
-//
-//        double[] pg2 = new double[vettore.length]; //prob di guasto2 AGV1
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv1[i] == 2) {
-//                pg2[i] = ((Math.pow(alpha, tf2[i] / MTBF)) - (Math.pow((alpha - 1), tf2[i] / MTBF)));
-//            }
-//        }
-//
-////Calcoliamo il tempo di completamento per il primo AGV
-//        double[] tc1 = new double[vettore.length]; //tempo di complet1 AGV1
-//        double cum1 = 0;
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv1[i] == 1) {
-//                tc1[i] = tp[i] + tg * pg1[i] + cum1;
-//                cum1 = tc1[i];
-//            }
-//        }
-//
-//        double[] tc2 = new double[vettore.length]; //tempo di complet2 AGV1
-//        double cum2 = 0;
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv1[i] == 2) {
-//                tc2[i] = tp[i] + tg * pg2[i] + cum2;
-//                cum2 = tc2[i];
-//            }
-//        }
-//
-//        double max1 = tc1[0]; //massimo dei tempi di complet1 AGV1
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (tc1[i] > max1) {
-//                max1 = tc1[i];
-//            }
-//        }
-//
-//        double max2 = tc2[0]; //massimo dei tempi di complet2 AGV1
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (tc2[i] > max2) {
-//                max2 = tc2[i];
-//            }
-//        }
-//
-//        double tcagv1 = max1 + max2 + tr; //tempo di completamento AGV1
-//
-////Calcoliamo il tempo figurato per il secondo AGV
-//        double[] tf3 = new double[vettore.length]; //tempo figurato3 AGV2
-//        double cumulata3 = 0;
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv2[i] == 3) {
-//                tf3[i] = tp[i] * w[i] + cumulata3;
-//                cumulata3 = tf3[i];
-//            }
-//        }
-//
-//        double[] tf4 = new double[vettore.length]; //tempo figurato4 AGV2
-//        double cumulata4 = 0;
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv2[i] == 4) {
-//                tf4[i] = tp[i] * w[i] + cumulata4;
-//                cumulata4 = tf4[i];
-//            }
-//        }
-//
-////Calcoliamo la probabilit� di guasto per il secondo AGV
-//        double[] pg3 = new double[vettore.length]; //prob di guasto3 AGV2
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv2[i] == 3) {
-//                pg3[i] = ((Math.pow(alpha, tf3[i] / MTBF)) - (Math.pow((alpha - 1), tf3[i] / MTBF)));
-//            }
-//        }
-//
-//        double[] pg4 = new double[vettore.length]; //prob di guasto4 AGV2
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv2[i] == 4) {
-//                pg4[i] = ((Math.pow(alpha, tf4[i] / MTBF)) - (Math.pow((alpha - 1), tf4[i] / MTBF)));
-//            }
-//        }
-//
-////Tempo di completamento AGV2
-//        double[] tc3 = new double[vettore.length]; //tempo di complet3 AGV2
-//        double cum3 = 0;
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv2[i] == 3) {
-//                tc3[i] = tp[i] + tg * pg3[i] + cum3;
-//                cum3 = tc3[i];
-//            }
-//        }
-//
-//        double[] tc4 = new double[vettore.length]; //tempo di complet4 AGV2
-//        double cum4 = 0;
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv2[i] == 4) {
-//                tc4[i] = tp[i] + tg * pg4[i] + cum4;
-//                cum4 = tc4[i];
-//            }
-//        }
-//
-//        double max3 = tc3[0]; //massimo dei tempi di complet3 AGV2
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (tc3[i] > max3) {
-//                max3 = tc3[i];
-//            }
-//        }
-//
-//        double max4 = tc4[0]; //massimo dei tempi di complet4 AGV2
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (tc4[i] > max4) {
-//                max4 = tc4[i];
-//            }
-//        }
+        double costoPenalty = beta * (ritardoFoglio1 * sommatoriaIndicePriority1 + ritardoFoglio2 * sommatoriaIndicePriority2);
+
+        return costoSpreco + costoPenalty;
+
+        //<editor-fold defaultstate="collapsed" desc=" Codice della tua amica ">    
 //
 //        double tcagv2 = max3 + max4 + tr; //tempo di completamento AGV2
 //
@@ -281,18 +121,18 @@ public class GeneticAlgorithm {
 //        individual.setFitness(fitness);
 //
 //        return fitness;
+//</editor-fold>
     }
 
     /*Valutiamo la popolazione attraverso un loop che calcola la fitness per ogni individuo
 * e dopo calcola la fitness dell'intera popolazione
      */
-    public void evalPopulation(Population population, double[] tp, double[] w,
-            int alpha, int MTBF, double tg, double tr) {
+    public void evalPopulation(Population population, double areaFoglio, double alpha, double beta, Ordine[] ordini) throws SoluzioneImpossibileException {
 
         double populationFitness = 0;
 
         for (Individual individual : population.getIndividuals()) {
-            populationFitness += calcFitness(individual, tp, w, alpha, MTBF, tg, tr);
+            populationFitness += calcFitness(individual, areaFoglio, alpha, beta, ordini);
         }
         population.setPopulationFitness(populationFitness);
     }
@@ -348,7 +188,7 @@ public class GeneticAlgorithm {
 //Facciamo un loop sul genoma
                 for (int iIndex = 0; iIndex < parent1.getVettoreLength(); iIndex++) {
 
-//Usiamo met� dei geni del genitore 1 e met� di quelli del genitore 2 
+//Usiamo met� dei geni del genitore 1 e metà di quelli del genitore 2 
                     if (0.5 > Math.random()) {
                         offspring.setI(iIndex, parent1.getI(iIndex));
                     } else {
@@ -408,102 +248,156 @@ public class GeneticAlgorithm {
         return newPopulation;
     }
 
-    public double tempodicompletamento(Population population, double[] tp, double tr) {
+    public double minimoCosto(Population population, Ordine [] ordini, double areaFoglio, double alpha, double beta) throws SoluzioneImpossibileException {
 
-        int[] Fittest = population.getFittest(0).getvettore();
+        Individual fittest = population.getFittest(0);
 
-        int[] primoagv = new int[Fittest.length];
-        for (int i = 0; i < Fittest.length; i++) {
-            if (Fittest[i] != 3 && Fittest[i] != 4) {
-                primoagv[i] = Fittest[i];
-            }
+        int[] nessunFoglio = fittest.getOrdiniByIndex(0);
+        int[] foglio1 = fittest.getOrdiniByIndex(1);
+        int[] foglio2 = fittest.getOrdiniByIndex(2);
+
+
+        double areaOrdiniFoglio1 = calculateAreaOrdiniByIndex(foglio1, ordini);
+        double areaOrdiniFoglio2 = calculateAreaOrdiniByIndex(foglio2, ordini);
+
+        if (areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio) {
+            throw new SoluzioneImpossibileException("La somma delle aree degli ordini non può eccedere l'area del foglio");
         }
 
-        int[] secondoagv = new int[Fittest.length];
-        for (int i = 0; i < Fittest.length; i++) {
-            if (Fittest[i] != 1 && Fittest[i] != 2) {
-                secondoagv[i] = Fittest[i];
-            }
-        }
+        double sprecoFoglio1 = (areaFoglio - areaOrdiniFoglio1) / areaFoglio;
+        double sprecoFoglio2 = (areaFoglio - areaOrdiniFoglio2) / areaFoglio;
 
-        // AGV1
-        double[] t1 = new double[Fittest.length]; //tempo di complet1 AGV1
-        double cumulata1 = 0;
-        for (int i = 0; i < Fittest.length; i++) {
-            if (primoagv[i] == 1) {
-                t1[i] = tp[i] + cumulata1;
-                cumulata1 = t1[i];
-            }
-        }
+        double costoSpreco = alpha * (sprecoFoglio1 + sprecoFoglio2);
 
-        double massimo1 = t1[0]; //massimo dei tempi di complet1 AGV1
-        for (int i = 0; i < Fittest.length; i++) {
-            if (t1[i] > massimo1) {
-                massimo1 = t1[i];
-            }
-        }
+        double minDueDateFoglio1 = calculateMinExpirationDate(foglio1, ordini);
+        double minDueDateFoglio2 = calculateMinExpirationDate(foglio2, ordini);
 
-        double[] t2 = new double[Fittest.length]; //tempo di complet2 AGV1
-        double cumulata2 = 0;
-        for (int i = 0; i < Fittest.length; i++) {
-            if (primoagv[i] == 2) {
-                t2[i] = tp[i] + cumulata2;
-                cumulata2 = t2[i];
-            }
-        }
+        double tempoElaborazioneFoglio1 = getSommaTempoRetinatura(foglio1, ordini);
+        double tempoElaborazioneFoglio2 = getSommaTempoRetinatura(foglio2, ordini);
 
-        double massimo2 = t2[0]; //massimo dei tempi di complet2 AGV1
-        for (int i = 0; i < Fittest.length; i++) {
-            if (t2[i] > massimo2) {
-                massimo2 = t2[i];
-            }
-        }
+        double c1 = tempoElaborazioneFoglio1;
+        double c2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
 
-        double tcagv1 = massimo1 + massimo2 + tr; //tempo di completamento agv1 
+        double ritardoFoglio1 = c1 - minDueDateFoglio1 >= 0 ? c1 - minDueDateFoglio1 : 0;
+        double ritardoFoglio2 = c2 - minDueDateFoglio2 >= 0 ? c2 - minDueDateFoglio2 : 0;
 
-        //AGV2
-        double[] t3 = new double[Fittest.length]; //tempo di complet3 AGV2
-        double cumulata3 = 0;
-        for (int i = 0; i < Fittest.length; i++) {
-            if (secondoagv[i] == 3) {
-                t3[i] = tp[i] + cumulata3;
-                cumulata3 = t3[i];
-            }
-        }
+        double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini);
+        double sommatoriaIndicePriority2 = getSommaIndicePriorita(foglio2, ordini);
 
-        double massimo3 = t3[0]; //massimo dei tempi di complet3 AGV2
-        for (int i = 0; i < Fittest.length; i++) {
-            if (t3[i] > massimo3) {
-                massimo3 = t3[i];
-            }
-        }
+        double costoPenalty = beta * (ritardoFoglio1 * sommatoriaIndicePriority1 + ritardoFoglio2 * sommatoriaIndicePriority2);
 
-        double[] t4 = new double[Fittest.length]; //tempo di complet4 AGV2
-        double cumulata4 = 0;
-        for (int i = 0; i < Fittest.length; i++) {
-            if (secondoagv[i] == 4) {
-                t4[i] = tp[i] + cumulata4;
-                cumulata4 = t4[i];
-            }
-        }
+        return costoSpreco + costoPenalty;
 
-        double massimo4 = t4[0]; //massimo dei tempi di complet4 AGV2
-        for (int i = 0; i < Fittest.length; i++) {
-            if (t4[i] > massimo4) {
-                massimo4 = t4[i];
-            }
-        }
-
-        double tcagv2 = massimo3 + massimo4 + tr; //tempo di completamento agv2
-
-        double fitness1 = 0;
-        if (tcagv1 > tcagv2) {
-            fitness1 = tcagv1;
-        } else {
-            fitness1 = tcagv2;
-        }
-
-        return fitness1;
+//        int[] Fittest = population.getFittest(0).getvettore();
+//
+//        int[] primoFoglio = new int[Fittest.length];
+//        for (int i = 0; i < Fittest.length; i++) {
+//            if (Fittest[i] != 0 && Fittest[i] != 2) {
+//                primoFoglio[i] = Fittest[i];
+//            }
+//        }
+//
+//        int[] secondoFoglio = new int[Fittest.length];
+//        for (int i = 0; i < Fittest.length; i++) {
+//            if (Fittest[i] != 0 && Fittest[i] != 1) {
+//                secondoFoglio[i] = Fittest[i];
+//            }
+//        }
+        // FOGLIO 1
+//        double[] tf1 = new double[vettore.length]; //tempo figurato1 AGV1
+//        double cumulata1 = 0;
+//        for (int i = 0; i < vettore.length; i++) {
+//            if (agv1[i] == 1) {
+//                tf1[i] = tp[i] * w[i] + cumulata1;
+//                cumulata1 = tf1[i];
+//            }
+//        }
+//
+//        double[] tf2 = new double[vettore.length]; //tempo figurato2 AGV1
+//        double cumulata2 = 0;
+//        for (int i = 0; i < vettore.length; i++) {
+//            if (agv1[i] == 2) {
+//                tf2[i] = tp[i] * w[i] + cumulata2;
+//                cumulata2 = tf2[i];
+//            }
+//        }
+//        double[] t1 = new double[Fittest.length]; //tempo di complet1 AGV1
+//        double cumulata1 = 0;
+//        for (int i = 0; i < Fittest.length; i++) {
+//            if (primoFoglio[i] == 1) {
+//                t1[i] = tp[i] + cumulata1;
+//                cumulata1 = t1[i];
+//            }
+//        }
+//
+//        double massimo1 = t1[0]; //massimo dei tempi di complet1 AGV1
+//        for (int i = 0; i < Fittest.length; i++) {
+//            if (t1[i] > massimo1) {
+//                massimo1 = t1[i];
+//            }
+//        }
+//
+//        double[] t2 = new double[Fittest.length]; //tempo di complet2 AGV1
+//        double cumulata2 = 0;
+//        for (int i = 0; i < Fittest.length; i++) {
+//            if (primoFoglio[i] == 2) {
+//                t2[i] = tp[i] + cumulata2;
+//                cumulata2 = t2[i];
+//            }
+//        }
+//
+//        double massimo2 = t2[0]; //massimo dei tempi di complet2 AGV1
+//        for (int i = 0; i < Fittest.length; i++) {
+//            if (t2[i] > massimo2) {
+//                massimo2 = t2[i];
+//            }
+//        }
+//
+//        double tcagv1 = massimo1 + massimo2 + tr; //tempo di completamento agv1 
+//
+//        //AGV2
+//        double[] t3 = new double[Fittest.length]; //tempo di complet3 AGV2
+//        double cumulata3 = 0;
+//        for (int i = 0; i < Fittest.length; i++) {
+//            if (secondoFoglio[i] == 3) {
+//                t3[i] = tp[i] + cumulata3;
+//                cumulata3 = t3[i];
+//            }
+//        }
+//
+//        double massimo3 = t3[0]; //massimo dei tempi di complet3 AGV2
+//        for (int i = 0; i < Fittest.length; i++) {
+//            if (t3[i] > massimo3) {
+//                massimo3 = t3[i];
+//            }
+//        }
+//
+//        double[] t4 = new double[Fittest.length]; //tempo di complet4 AGV2
+//        double cumulata4 = 0;
+//        for (int i = 0; i < Fittest.length; i++) {
+//            if (secondoFoglio[i] == 4) {
+//                t4[i] = tp[i] + cumulata4;
+//                cumulata4 = t4[i];
+//            }
+//        }
+//
+//        double massimo4 = t4[0]; //massimo dei tempi di complet4 AGV2
+//        for (int i = 0; i < Fittest.length; i++) {
+//            if (t4[i] > massimo4) {
+//                massimo4 = t4[i];
+//            }
+//        }
+//
+//        double tcagv2 = massimo3 + massimo4 + tr; //tempo di completamento agv2
+//
+//        double fitness1 = 0;
+//        if (tcagv1 > tcagv2) {
+//            fitness1 = tcagv1;
+//        } else {
+//            fitness1 = tcagv2;
+//        }
+//
+//        return fitness1;
     }
 
 }
