@@ -17,8 +17,8 @@ public class Main {
             id++;
         }
 
-        double H = 3; //altezza del foglio
-        double W = 4; //larghezza del foglio
+        double H = 30; //altezza del foglio
+        double W = 50; //larghezza del foglio
         double areaFoglio = H * W; //area del foglio
 
         double alpha = 3.2d; //costo spreco
@@ -69,7 +69,7 @@ public class Main {
         Population population = ga.initPopulation(8);
 
 //Valutiamo la popolazione
-//    OHNO    ga.evalPopulation(population, tp, w, alpha, MTBF, tg, tr);
+    OHNO    ga.evalPopulation(population, tp, w, alpha, MTBF, tg, tr);
 
         int generation = 1;
 
@@ -100,8 +100,8 @@ public class Main {
 
         System.out.println("La schedulazione �: " + population.getFittest(0));
 
-//   OHNO     double tempodicompletamento = ga.tempodicompletamento(population, tp, tr);
-//   OHNO     System.out.println("Cmax �: " + tempodicompletamento);
+   OHNO     double tempodicompletamento = ga.tempodicompletamento(population, tp, tr);
+   OHNO     System.out.println("Cmax �: " + tempodicompletamento);
 
         System.out.print("tp �: ");
         for (int i = 0; i < 8; i++) {
