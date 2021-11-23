@@ -8,15 +8,10 @@ public class main {
 
 	public static void main(String[] args) {
 		
-		//int alpha = 100000; //alpha per la prob di guasto
-		int MTBF = 6; //tempo medio tra due guasti
-		double tg = 5; //tempo medio di recupero a guasto
-		double tr = 2; //tempo di ricarica
                 
-                //
-                int H = 3; //altezza del foglio
-                int W = 4; //larghezza del foglio
-                int Area = H*W; //area del foglio
+                double H = 3; //altezza del foglio
+                double W = 4; //larghezza del foglio
+                double areaFoglio = H*W; //area del foglio
                 
                 double alpha = 3.2d; //costo spreco
                 double beta = 2.1d; //costo penalità
@@ -35,6 +30,7 @@ public class main {
                 ordini[6] = new Ordine(2d, 2d, 3d, 3L, 3d);
                 ordini[7] = new Ordine(2d, 2d, 3d, 3L, 3d);
                 ordini[8] = new Ordine(2d, 2d, 3d, 3L, 3d);
+                
                 //TO BE CONTINUED..
                 
                 

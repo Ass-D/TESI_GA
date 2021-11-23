@@ -13,21 +13,19 @@ public class Ordine {
     
     public double h; //altezza dell'ordine
     public double w; //larghezza dell'ordine
-    public double p; //peso dell'ordine
-    public long d; //scadenza 
+    public double pesoOrdine; //peso dell'ordine
+    public long dueDate; //scadenza 
     public double r; //retinatura
     
 
     public Ordine(double h, double w, double p, long d, double r) {
         this.h = h;
         this.w = w;
-        this.p = p;
-        this.d = d;
+        this.pesoOrdine = p;
+        this.dueDate = d;
         this.r = r;
     }
 
-    
-    
     
     public final double area(){
         return this.h * this.w;
@@ -38,7 +36,7 @@ public class Ordine {
     }
     
     public final double indiceDiPriotita(){
-        return this.p / d;
+        return this.pesoOrdine / dueDate;
     }
     
     
