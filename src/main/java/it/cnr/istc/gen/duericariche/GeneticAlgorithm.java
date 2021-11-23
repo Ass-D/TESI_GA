@@ -21,60 +21,97 @@ public class GeneticAlgorithm {
         return population;
     }
 
-    
-    
-    private double calculateAreaOrdiniByIndex(int [] indexes, Ordine [] ordini){
+    private double calculateAreaOrdiniByIndex(int[] indexes, Ordine[] ordini) {
         double area = 0;
         for (int index : indexes) {
-            area+=ordini[index].area();
+            area += ordini[index].area();
         }
         return area;
     }
-    
-    
+
     /**
      * Calcola il minimo tra le scadenze degli ordini dati a partire dall'array
      * degli indici del medesimo foglio
+     *
      * @param indexes
      * @param ordini
-     * @return 
+     * @return
      */
-     private double calculateMinExpirationDate(int [] indexes, Ordine [] ordini){
+    private double calculateMinExpirationDate(int[] indexes, Ordine[] ordini) {
         double min = ordini[0].dueDate;
         for (int index : indexes) {
-            if(ordini[index].dueDate < min){
+            if (ordini[index].dueDate < min) {
                 min = ordini[index].dueDate;
             }
         }
         return min;
     }
+
+    private double getSommaTempoRetinatura(int[] indexes, Ordine[] ordini) {
+        double somma = 0;
+        for (int index : indexes) {
+            somma += ordini[index].tempoElaborazioneRetinatura();
+        }
+        return somma;
+    }
     
+    
+    private double getSommaIndicePriorita(int[] indexes, Ordine[] ordini) {
+        double somma = 0;
+        for (int index : indexes) {
+            somma += ordini[index].indiceDiPriotita();
+        }
+        return somma;
+    }
+
 //Calcoliamo la fitness per un individuo
-    public double calcFitness(Individual individual, double areaFoglio, double alpha, double beta, Ordine [] ordini) {
+    public double calcFitness(Individual individual, double areaFoglio, double alpha, double beta, Ordine[] ordini) throws SoluzioneImpossibileException {
 
         int[] vettore = individual.getvettore();
-        
+
         int[] nessunFoglio = individual.getOrdiniByIndex(0);
         int[] foglio1 = individual.getOrdiniByIndex(1);
         int[] foglio2 = individual.getOrdiniByIndex(2);
-        
+
         int areaTotaleFoglio1 = 0;
-        
+
         double areaOrdiniFoglio1 = calculateAreaOrdiniByIndex(foglio1, ordini);
         double areaOrdiniFoglio2 = calculateAreaOrdiniByIndex(foglio2, ordini);
         
-        double sprecoFoglio1 = (areaFoglio - areaOrdiniFoglio1)/areaFoglio;
-        double sprecoFoglio2 = (areaFoglio - areaOrdiniFoglio2)/areaFoglio;
-        
-        double costoSpreco = alpha*(sprecoFoglio1+sprecoFoglio2);
-        
+        if(areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio){
+            throw new SoluzioneImpossibileException("La somma delle aree degli ordini non può eccedere l'area del foglio");
+        }
+
+        double sprecoFoglio1 = (areaFoglio - areaOrdiniFoglio1) / areaFoglio;
+        double sprecoFoglio2 = (areaFoglio - areaOrdiniFoglio2) / areaFoglio;
+
+        double costoSpreco = alpha * (sprecoFoglio1 + sprecoFoglio2);
+
         double minDueDateFoglio1 = calculateMinExpirationDate(foglio1, ordini);
         double minDueDateFoglio2 = calculateMinExpirationDate(foglio2, ordini);
         
+        double tempoElaborazioneFoglio1 = getSommaTempoRetinatura(foglio1, ordini);
+        double tempoElaborazioneFoglio2 = getSommaTempoRetinatura(foglio2, ordini);
+        
+        double c1 = tempoElaborazioneFoglio1;
+        double c2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
+        
+        double ritardoFoglio1 = c1 - minDueDateFoglio1 >= 0 ? c1 - minDueDateFoglio1 : 0;
+        double ritardoFoglio2 = c2 - minDueDateFoglio2 >= 0 ? c2 - minDueDateFoglio2 : 0;
+        
+        double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini);
+        double sommatoriaIndicePriority2 = getSommaIndicePriorita(foglio2, ordini);
+        
+        double costoPenalty = beta*(ritardoFoglio1*sommatoriaIndicePriority1+ ritardoFoglio2*sommatoriaIndicePriority2);
         
         
         
         
+        return costoSpreco + costoPenalty;
+        
+        
+        
+
 //
 ////Suddividiamo il vettore individuo in due parti, una per ogni AGV
 //        int[] agv1 = new int[vettore.length];

@@ -15,7 +15,7 @@ public class Ordine {
     public double w; //larghezza dell'ordine
     public double pesoOrdine; //peso dell'ordine
     public long dueDate; //scadenza 
-    public double r; //retinatura
+    public double retinatura; //retinatura
     
 
     public Ordine(double h, double w, double p, long d, double r) {
@@ -23,7 +23,7 @@ public class Ordine {
         this.w = w;
         this.pesoOrdine = p;
         this.dueDate = d;
-        this.r = r;
+        this.retinatura = r;
     }
 
     
@@ -32,7 +32,7 @@ public class Ordine {
     }
     
     public final double tempoElaborazioneRetinatura(){
-        return area() *r;
+        return area() *retinatura;
     }
     
     public final double indiceDiPriotita(){
