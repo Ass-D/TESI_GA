@@ -14,11 +14,11 @@ public class Ordine {
     public double h; //altezza dell'ordine
     public double w; //larghezza dell'ordine
     public double pesoOrdine; //peso dell'ordine
-    public long dueDate; //scadenza 
+    public double dueDate; //scadenza 
     public double retinatura; //retinatura
     
 
-    public Ordine(double h, double w, double p, long d, double r) {
+    public Ordine(double h, double w, double p, double d, double r) {
         this.h = h;
         this.w = w;
         this.pesoOrdine = p;
@@ -38,6 +38,12 @@ public class Ordine {
     public final double indiceDiPriotita(){
         return this.pesoOrdine / dueDate;
     }
+
+    @Override
+    public String toString() {
+        return "Ordine: h = "+h+", w = "+w+", pesoOrdine= "+pesoOrdine+", dueDate = "+dueDate+", retinatura = "+retinatura;
+    }
+    
     
     
 }

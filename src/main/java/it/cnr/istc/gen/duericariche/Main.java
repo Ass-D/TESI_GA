@@ -1,10 +1,21 @@
 package it.cnr.istc.gen.duericariche;
 
+import it.cnr.istc.gen.duericariche.files.OrdiniFileReader;
+
 public class Main {
 
     public static int maxGenerations = 100; // massimo num. di iterazioni per la terminazione
 
     public static void main(String[] args) {
+        
+        System.out.println("TEST  READ FILE: ");
+        Ordine[] ordini = OrdiniFileReader.readFile("dati.csv");
+        
+        int id = 1;
+        for (Ordine ordine : ordini) {
+            System.out.println(id+") "+ordine);
+            id++;
+        }
 
         double H = 3; //altezza del foglio
         double W = 4; //larghezza del foglio
@@ -13,18 +24,18 @@ public class Main {
         double alpha = 3.2d; //costo spreco
         double beta = 2.1d; //costo penalità
 
-        Ordine[] ordini = new Ordine[30];
+//        Ordine[] ordini = new Ordine[30];
 
         //                      h   w   p   d   r
-        ordini[0] = new Ordine(2d, 2d, 3d, 3L, 3d);
-        ordini[1] = new Ordine(2d, 2d, 3d, 3L, 3d);
-        ordini[2] = new Ordine(2d, 2d, 3d, 3L, 3d);
-        ordini[3] = new Ordine(2d, 2d, 3d, 3L, 3d);
-        ordini[4] = new Ordine(2d, 2d, 3d, 3L, 3d);
-        ordini[5] = new Ordine(2d, 2d, 3d, 3L, 3d);
-        ordini[6] = new Ordine(2d, 2d, 3d, 3L, 3d);
-        ordini[7] = new Ordine(2d, 2d, 3d, 3L, 3d);
-        ordini[8] = new Ordine(2d, 2d, 3d, 3L, 3d);
+//        ordini[0] = new Ordine(2d, 2d, 3d, 3L, 3d);
+//        ordini[1] = new Ordine(2d, 2d, 3d, 3L, 3d);
+//        ordini[2] = new Ordine(2d, 2d, 3d, 3L, 3d);
+//        ordini[3] = new Ordine(2d, 2d, 3d, 3L, 3d);
+//        ordini[4] = new Ordine(2d, 2d, 3d, 3L, 3d);
+//        ordini[5] = new Ordine(2d, 2d, 3d, 3L, 3d);
+//        ordini[6] = new Ordine(2d, 2d, 3d, 3L, 3d);
+//        ordini[7] = new Ordine(2d, 2d, 3d, 3L, 3d);
+//        ordini[8] = new Ordine(2d, 2d, 3d, 3L, 3d);
 
         //TO BE CONTINUED..
         /* Calcoliamo il vettore dei tempi di processamento in modo casuale
