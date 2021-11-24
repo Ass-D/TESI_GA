@@ -1,5 +1,6 @@
 package it.cnr.istc.gen.duericariche;
 
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,14 +71,18 @@ public class GeneticAlgorithm {
     public double calcFitness(Individual individual, double areaFoglio, double alpha, double beta, Ordine[] ordini) throws SoluzioneImpossibileException {
 
         //  int[] vettore = individual.getvettore();
-        int[] nessunFoglio = individual.getOrdiniByIndex(0);
+        //int[] nessunFoglio = individual.getOrdiniByIndex(0);
         int[] foglio1 = individual.getOrdiniByIndex(1);
         int[] foglio2 = individual.getOrdiniByIndex(2);
+        int[] foglio3 = individual.getOrdiniByIndex(3);
+        int[] foglio4 = individual.getOrdiniByIndex(4);
 
         double areaOrdiniFoglio1 = calculateAreaOrdiniByIndex(foglio1, ordini);
         double areaOrdiniFoglio2 = calculateAreaOrdiniByIndex(foglio2, ordini);
+        double areaOrdiniFoglio3 = calculateAreaOrdiniByIndex(foglio3, ordini);
+        double areaOrdiniFoglio4 = calculateAreaOrdiniByIndex(foglio4, ordini);
 
-        if (areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio) {
+        if (areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio || areaOrdiniFoglio3 > areaFoglio || areaOrdiniFoglio4 > areaFoglio) {
 //            System.out.println("areaOrdiniFoglio1  =  "+areaOrdiniFoglio1);
 //            System.out.println("areaFoglio  =  "+areaFoglio);
 //            System.out.println("============================================");
@@ -91,25 +96,46 @@ public class GeneticAlgorithm {
 
         double sprecoFoglio1 = (areaFoglio - areaOrdiniFoglio1) / areaFoglio;
         double sprecoFoglio2 = (areaFoglio - areaOrdiniFoglio2) / areaFoglio;
+        double sprecoFoglio3 = (areaFoglio - areaOrdiniFoglio3) / areaFoglio;
+        double sprecoFoglio4 = (areaFoglio - areaOrdiniFoglio4) / areaFoglio;
 
-        double costoSpreco = alpha * (sprecoFoglio1 + sprecoFoglio2);
+        double costoSpreco = alpha * (sprecoFoglio1 + sprecoFoglio2 + sprecoFoglio3 + sprecoFoglio4);
 
         double minDueDateFoglio1 = calculateMinExpirationDate(foglio1, ordini);
         double minDueDateFoglio2 = calculateMinExpirationDate(foglio2, ordini);
+        double minDueDateFoglio3 = calculateMinExpirationDate(foglio3, ordini);
+        double minDueDateFoglio4 = calculateMinExpirationDate(foglio4, ordini);
 
         double tempoElaborazioneFoglio1 = getSommaTempoRetinatura(foglio1, ordini);
         double tempoElaborazioneFoglio2 = getSommaTempoRetinatura(foglio2, ordini);
+        double tempoElaborazioneFoglio3 = getSommaTempoRetinatura(foglio3, ordini);
+        double tempoElaborazioneFoglio4 = getSommaTempoRetinatura(foglio4, ordini);
 
-        double c1 = tempoElaborazioneFoglio1;
-        double c2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
+        //qva
+//        if(individual.getvettore()[0] == 1){
+//            double c1 = tempoElaborazioneFoglio1; asdoòhashd
+//        }
+//        double c1 = tempoElaborazioneFoglio1;
+//        double c2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
+        Map<Integer, Double> tempiElabMap = individual.getTempiDiElaborazione(ordini);
 
-        double ritardoFoglio1 = c1 - minDueDateFoglio1 >= 0 ? c1 - minDueDateFoglio1 : 0;
-        double ritardoFoglio2 = c2 - minDueDateFoglio2 >= 0 ? c2 - minDueDateFoglio2 : 0;
+        //TODO RENDERE GENERICA QUESTA PARTE 
+        double ritardoFoglio1 = tempiElabMap.get(1) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(1) - minDueDateFoglio1 : 0;
+        double ritardoFoglio2 = tempiElabMap.get(2) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(2) - minDueDateFoglio1 : 0;
+        double ritardoFoglio3 = tempiElabMap.get(3) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(3) - minDueDateFoglio1 : 0;
+        double ritardoFoglio4 = tempiElabMap.get(4) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(4) - minDueDateFoglio1 : 0;
 
         double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini);
         double sommatoriaIndicePriority2 = getSommaIndicePriorita(foglio2, ordini);
+        double sommatoriaIndicePriority3 = getSommaIndicePriorita(foglio3, ordini);
+        double sommatoriaIndicePriority4 = getSommaIndicePriorita(foglio4, ordini);
 
-        double costoPenalty = beta * (ritardoFoglio1 * sommatoriaIndicePriority1 + ritardoFoglio2 * sommatoriaIndicePriority2);
+        double costoPenalty = beta * (
+                ritardoFoglio1 * sommatoriaIndicePriority1 + 
+                ritardoFoglio2 * sommatoriaIndicePriority2 +
+                ritardoFoglio3 * sommatoriaIndicePriority3 +
+                ritardoFoglio4 * sommatoriaIndicePriority4
+                );
 
         double fitness = costoSpreco + costoPenalty;
         fitness = 1 / fitness;
