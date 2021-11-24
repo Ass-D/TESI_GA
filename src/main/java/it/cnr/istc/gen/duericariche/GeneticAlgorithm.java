@@ -343,6 +343,7 @@ public class GeneticAlgorithm {
         double sommatoriaIndicePriority2 = getSommaIndicePriorita(foglio2, ordini);
 
         double costoPenalty = beta * (ritardoFoglio1 * sommatoriaIndicePriority1 + ritardoFoglio2 * sommatoriaIndicePriority2);
+        
 
         return costoSpreco + costoPenalty;
 

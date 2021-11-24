@@ -62,7 +62,14 @@ public class Main {
             System.out.println("La fitness è: " + fittest.getFitness());
         }
 
-        System.out.println("La schedulazione è: " + population.getFittest(0));
+        System.out.println("La soluzione migliore è: " + population.getFittest(0));
+        System.out.println("====================================================");
+        System.out.println("Le altre soluzioni: ");
+        int i = 0;
+        for (Individual individual : population.getIndividuals()) {
+            System.out.println("Soluzione alternativa "+i+") "+individual);
+            i++;
+        }
 
         double tempodicompletamento = -2;
         try {
