@@ -1,5 +1,8 @@
 package it.cnr.istc.gen.duericariche;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class GeneticAlgorithm {
 
     private int populationSize; // dimensione della popolazione 
@@ -75,7 +78,15 @@ public class GeneticAlgorithm {
         double areaOrdiniFoglio2 = calculateAreaOrdiniByIndex(foglio2, ordini);
 
         if (areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio) {
+//            System.out.println("areaOrdiniFoglio1  =  "+areaOrdiniFoglio1);
+//            System.out.println("areaFoglio  =  "+areaFoglio);
+//            System.out.println("============================================");
+//            System.out.println("areaOrdiniFoglio2  =  "+areaOrdiniFoglio2);
+//            System.out.println("areaFoglio  =  "+areaFoglio);
+//            System.out.println("============================================");
             throw new SoluzioneImpossibileException("La somma delle aree degli ordini non può eccedere l'area del foglio");
+        }else{
+//            System.out.println("********** VINCOLI OK ****************");
         }
 
         double sprecoFoglio1 = (areaFoglio - areaOrdiniFoglio1) / areaFoglio;
@@ -100,7 +111,10 @@ public class GeneticAlgorithm {
 
         double costoPenalty = beta * (ritardoFoglio1 * sommatoriaIndicePriority1 + ritardoFoglio2 * sommatoriaIndicePriority2);
 
-        return costoSpreco + costoPenalty;
+        double fitness = costoSpreco + costoPenalty;
+//        System.out.println("\n\n FITNESS ==== >>  "+fitness);
+        individual.setFitness(fitness);
+        return fitness;
 
         //<editor-fold defaultstate="collapsed" desc=" Codice della tua amica ">    
 //
@@ -127,12 +141,20 @@ public class GeneticAlgorithm {
     /*Valutiamo la popolazione attraverso un loop che calcola la fitness per ogni individuo
 * e dopo calcola la fitness dell'intera popolazione
      */
-    public void evalPopulation(Population population, double areaFoglio, double alpha, double beta, Ordine[] ordini) throws SoluzioneImpossibileException {
+    public void evalPopulation(Population population, double areaFoglio, double alpha, double beta, Ordine[] ordini) {
 
         double populationFitness = 0;
 
         for (Individual individual : population.getIndividuals()) {
-            populationFitness += calcFitness(individual, areaFoglio, alpha, beta, ordini);
+            try {
+//                System.out.println("INDIVIDUAL FITNESS BEFORE = "+individual.getFitness());
+                double fitness = calcFitness(individual, areaFoglio, alpha, beta, ordini);
+//                System.out.println("INDIVIDUAL FITNESS AFTER = "+individual.getFitness());
+                populationFitness += fitness;
+            } catch (SoluzioneImpossibileException ex) {
+//                System.out.println("Vincolo non rispettato");
+                
+            }
         }
         population.setPopulationFitness(populationFitness);
     }
