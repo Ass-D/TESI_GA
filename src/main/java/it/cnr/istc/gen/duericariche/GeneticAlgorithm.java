@@ -85,7 +85,7 @@ public class GeneticAlgorithm {
 //            System.out.println("areaFoglio  =  "+areaFoglio);
 //            System.out.println("============================================");
             throw new SoluzioneImpossibileException("La somma delle aree degli ordini non può eccedere l'area del foglio");
-        }else{
+        } else {
 //            System.out.println("********** VINCOLI OK ****************");
         }
 
@@ -112,6 +112,7 @@ public class GeneticAlgorithm {
         double costoPenalty = beta * (ritardoFoglio1 * sommatoriaIndicePriority1 + ritardoFoglio2 * sommatoriaIndicePriority2);
 
         double fitness = costoSpreco + costoPenalty;
+        fitness = 1 / fitness;
 //        System.out.println("\n\n FITNESS ==== >>  "+fitness);
         individual.setFitness(fitness);
         return fitness;
@@ -153,7 +154,7 @@ public class GeneticAlgorithm {
                 populationFitness += fitness;
             } catch (SoluzioneImpossibileException ex) {
 //                System.out.println("Vincolo non rispettato");
-                
+
             }
         }
         population.setPopulationFitness(populationFitness);
@@ -270,14 +271,13 @@ public class GeneticAlgorithm {
         return newPopulation;
     }
 
-    public double minimoCosto(Population population, Ordine [] ordini, double areaFoglio, double alpha, double beta) throws SoluzioneImpossibileException {
+    public double minimoCosto(Population population, Ordine[] ordini, double areaFoglio, double alpha, double beta) throws SoluzioneImpossibileException {
 
         Individual fittest = population.getFittest(0);
 
         int[] nessunFoglio = fittest.getOrdiniByIndex(0);
         int[] foglio1 = fittest.getOrdiniByIndex(1);
         int[] foglio2 = fittest.getOrdiniByIndex(2);
-
 
         double areaOrdiniFoglio1 = calculateAreaOrdiniByIndex(foglio1, ordini);
         double areaOrdiniFoglio2 = calculateAreaOrdiniByIndex(foglio2, ordini);

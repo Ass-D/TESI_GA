@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class Main {
 
-    public static int maxGenerations = 1000; // massimo num. di iterazioni per la terminazione
+    public static int maxGenerations = 300; // massimo num. di iterazioni per la terminazione
 
     public static void main(String[] args) {
 
@@ -28,7 +28,7 @@ public class Main {
         double beta = 50; //costo penalità
 
 // Creiamo l'oggetto ga
-        GeneticAlgorithm ga = new GeneticAlgorithm(1000, 0.01, 0.95, 0);
+        GeneticAlgorithm ga = new GeneticAlgorithm(300, 0.01, 0.95, 0);
 
 //Inizializziamo la popolazione specificando la lunghezza dei cromosomi
         Population population = ga.initPopulation(30);
@@ -70,7 +70,7 @@ public class Main {
         } catch (SoluzioneImpossibileException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("Cmax �: " + tempodicompletamento);
+        //System.out.println("Cmax �: " + tempodicompletamento);
 
 
         /*  System.out.print("tp �: ");
