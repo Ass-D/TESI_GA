@@ -120,22 +120,32 @@ public class GeneticAlgorithm {
         Map<Integer, Double> tempiElabMap = individual.getTempiDiElaborazione(ordini);
 
         //TODO RENDERE GENERICA QUESTA PARTE 
-        double ritardoFoglio1 = tempiElabMap.get(1) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(1) - minDueDateFoglio1 : 0;
-        double ritardoFoglio2 = tempiElabMap.get(2) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(2) - minDueDateFoglio1 : 0;
-        double ritardoFoglio3 = tempiElabMap.get(3) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(3) - minDueDateFoglio1 : 0;
-        double ritardoFoglio4 = tempiElabMap.get(4) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(4) - minDueDateFoglio1 : 0;
+        double ritardoFoglio1 = 0;
+        double ritardoFoglio2 = 0;
+        double ritardoFoglio3 = 0;
+        double ritardoFoglio4 = 0;
+        if (tempiElabMap.containsKey(1)) {
+            ritardoFoglio1 = tempiElabMap.get(1) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(1) - minDueDateFoglio1 : 0;
+        }
+        if (tempiElabMap.containsKey(2)) {
+            ritardoFoglio2 = tempiElabMap.get(2) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(2) - minDueDateFoglio1 : 0;
+        }
+        if (tempiElabMap.containsKey(3)) {
+            ritardoFoglio3 = tempiElabMap.get(3) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(3) - minDueDateFoglio1 : 0;
+        }
+        if (tempiElabMap.containsKey(4)) {
+            ritardoFoglio4 = tempiElabMap.get(4) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(4) - minDueDateFoglio1 : 0;
+        }
 
         double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini);
         double sommatoriaIndicePriority2 = getSommaIndicePriorita(foglio2, ordini);
         double sommatoriaIndicePriority3 = getSommaIndicePriorita(foglio3, ordini);
         double sommatoriaIndicePriority4 = getSommaIndicePriorita(foglio4, ordini);
 
-        double costoPenalty = beta * (
-                ritardoFoglio1 * sommatoriaIndicePriority1 + 
-                ritardoFoglio2 * sommatoriaIndicePriority2 +
-                ritardoFoglio3 * sommatoriaIndicePriority3 +
-                ritardoFoglio4 * sommatoriaIndicePriority4
-                );
+        double costoPenalty = beta * (ritardoFoglio1 * sommatoriaIndicePriority1
+                + ritardoFoglio2 * sommatoriaIndicePriority2
+                + ritardoFoglio3 * sommatoriaIndicePriority3
+                + ritardoFoglio4 * sommatoriaIndicePriority4);
 
         double fitness = costoSpreco + costoPenalty;
         fitness = 1 / fitness;
@@ -301,7 +311,7 @@ public class GeneticAlgorithm {
 
         Individual fittest = population.getFittest(0);
 
-        int[] nessunFoglio = fittest.getOrdiniByIndex(0);
+        //int[] nessunFoglio = fittest.getOrdiniByIndex(0);
         int[] foglio1 = fittest.getOrdiniByIndex(1);
         int[] foglio2 = fittest.getOrdiniByIndex(2);
 
