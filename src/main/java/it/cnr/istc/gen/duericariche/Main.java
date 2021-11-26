@@ -71,21 +71,17 @@ public class Main {
             System.out.println("Soluzione alternativa "+i+") "+individual);
             i++;
         }
-
-        double tempodicompletamento = -2;
+     
+    ////ASSUNTA: MOSTRARE come output anche lo spreco dei fogli 1 e 2 della soluzione migliore    
+    //    System.out.println("spreco foglio 1:" +sprecoFoglio1 );
+    //    System.out.println("spreco foglio 2:" +sprecoFoglio2 );  
+   //ASSUNTA: DOMANDA : perchè abbiamo messo uguale a -2 ??     
+        double minimoCosto = -2;
         try {
-            tempodicompletamento = ga.minimoCosto(population, ordini, areaFoglio, alpha, beta);
+            minimoCosto = ga.minimoCosto(population, ordini, areaFoglio, alpha, beta);
         } catch (SoluzioneImpossibileException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //System.out.println("Cmax �: " + tempodicompletamento);
-
-
-        /*  System.out.print("tp �: ");
-        for (int i = 0; i < 8; i++) {
-            System.out.print(tp[i] + " ");
-        }
-         */
     }
 
 }

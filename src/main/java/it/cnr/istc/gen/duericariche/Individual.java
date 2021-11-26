@@ -54,7 +54,7 @@ public class Individual {
         }
         return d;
     }
-    
+    /*
     public Map<Integer,Double> getTempiDiElaborazione(Ordine [] ordini){
         List<Integer> sequenzaFogli = new LinkedList<>();
         for (int foglio : vettore) {
@@ -82,11 +82,11 @@ public class Individual {
         }
         return mapResult;
         
-    }
+    } */
 
-    /* Inizializziamo in modo randomico. 
-* Creiamo un vettore che sia composto da numeri che vanno da 1 a 4
-     */
+    
+    // Inizializziamo in modo randomico. Creiamo un vettore che sia composto da numeri che vanno da 1 a 4
+    
     public Individual(int vettoreLength) {
 
         this.vettore = new int[vettoreLength];
