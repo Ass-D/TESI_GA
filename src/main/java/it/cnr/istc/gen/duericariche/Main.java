@@ -6,12 +6,12 @@ import java.util.logging.Logger;
 
 public class Main {
 
-    public static int maxGenerations = 300; // massimo num. di iterazioni per la terminazione
+    public static int maxGenerations = 100; // massimo num. di iterazioni per la terminazione
 
     public static void main(String[] args) {
 
         System.out.println("TEST  READ FILE: ");
-        Ordine[] ordini = OrdiniFileReader.readFile("dati.csv");
+        Ordine[] ordini = OrdiniFileReader.readFile("dati3.csv");
 
         int id = 1;
         for (Ordine ordine : ordini) {
@@ -24,11 +24,11 @@ public class Main {
 
         double areaFoglio = H * W; //area del foglio
 
-        double alpha = 450; //costo spreco
-        double beta = 50; //costo penalità
+        double alpha = 451.6; //costo spreco
+        double beta = 82.5; //costo penalità
 
 // Creiamo l'oggetto ga
-        GeneticAlgorithm ga = new GeneticAlgorithm(300, 0.01, 0.95, 0);
+        GeneticAlgorithm ga = new GeneticAlgorithm(100, 0.01, 0.95, 0);
 
 //Inizializziamo la popolazione specificando la lunghezza dei cromosomi
         Population population = ga.initPopulation(30);
@@ -61,7 +61,8 @@ public class Main {
             Individual fittest = population.getFittest(0);
             System.out.println("La fitness è: " + fittest.getFitness());
         }
-
+        
+        
         System.out.println("La soluzione migliore è: " + population.getFittest(0));
         System.out.println("====================================================");
         System.out.println("Le altre soluzioni: ");
