@@ -50,6 +50,8 @@ public class FogliManager {
     }
     
     public void mapFoglio(Foglio foglio){
+        System.out.println("FOGLIO is null ? "+foglio == null);
+        System.out.println("SPESSORE: "+foglio.getSpessore());
         this.fogliPerSpessoreMap.put(foglio.getSpessore(), foglio);
     }
     

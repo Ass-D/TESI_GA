@@ -23,22 +23,25 @@ import java.io.FileReader;
  */
 public class OrdiniFileReader {
 
-    public static Ordine[] readFile(String file) throws IOException, CsvException {
+    public static void readFile(String file) throws IOException, CsvException {
 
-        Ordine[] ordini = new Ordine[30];
         int linesToAvoid = 7;
         int linesAvoided = 0;
         int lineParsed = 0;
         try ( CSVReader reader = new CSVReader(new FileReader(file))) {
             List<String[]> allLines = reader.readAll();
-            ordini = new Ordine[30];
 
             //allLines.forEach(x -> System.out.println(Arrays.toString(x)));
             for (String[] lines : allLines) {
                 //[1;44;82;1, 00;10;0, 14;;;;;]
-
+//                System.out.println("LINE: "+linesAvoided);
                 for (String line : lines) {
-                    if (linesAvoided >= 1 && linesToAvoid < 7) {
+//                    System.out.println("LINEA: "+line);
+                    if (line.contains("N.ordine")) {
+                        linesAvoided++;
+                        continue;
+                    }
+                    if (linesAvoided > 0 && linesAvoided < linesToAvoid) {
                         String[] split = line.split(";");
                         double foglioH = Double.parseDouble(split[1]);
                         double foglioW = Double.parseDouble(split[2]);
@@ -47,13 +50,17 @@ public class OrdiniFileReader {
                         double spessore     = Double.parseDouble(split[0]);
                         Foglio foglio = new Foglio(foglioH, foglioW, alpha, beta, spessore);
                         FogliManager.getInstance().mapFoglio(foglio);
+                        linesAvoided++;
+                        continue;
                     }
                     if (linesAvoided < linesToAvoid) {
                         linesAvoided++;
                         continue;
                     }
+                    
                     //System.out.println("LINE : " + line);
                     String[] split = line.split(";");
+                    try{
                     Ordine ordine = new Ordine(
                             Double.parseDouble(split[2]),
                             Double.parseDouble(split[1]),
@@ -61,27 +68,25 @@ public class OrdiniFileReader {
                             Double.parseDouble(split[4]),
                             Double.parseDouble(split[5])
                     );
-                    ordini[lineParsed] = ordine;
                     double spessore = Double.parseDouble(split[6]);
+//                    System.out.println("spessore: "+spessore);
                     FogliManager.getInstance().putOrdineInMap(ordine, FogliManager.getInstance().getFoglioBySpessore(spessore));
-                    lineParsed++;
-                    if (lineParsed == 30) {
-                        return ordini;
+                    }catch(NumberFormatException ex){
+                        ex.printStackTrace();
+                        System.out.println("LINEA BUGGATISSIMA = "+line);
                     }
                 }
-//                System.out.println("----------------------------");
-
-//                Ordine ordine = new Ordine(
-                //Double.parseDouble(line[2], line[1], line[3], line[4], line[5]);
             }
 
         } catch (IOException ex) {
+            ex.printStackTrace();
            throw ex;
         } catch (CsvException ex) {
+            ex.printStackTrace();
            throw ex;
+        } catch (Exception ex){
+            ex.printStackTrace();
         }
-
-        return ordini;
 
     }
 

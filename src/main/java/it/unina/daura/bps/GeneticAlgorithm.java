@@ -1,6 +1,7 @@
 package it.unina.daura.bps;
 
 import it.unina.daura.bps.exceptions.SoluzioneImpossibileException;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,7 +70,7 @@ public class GeneticAlgorithm {
     }
 
 //Calcoliamo la fitness per un individuo
-    public double calcFitness(Individual individual, double areaFoglio, double alpha, double beta, Ordine[] ordini) throws SoluzioneImpossibileException {
+    public double calcFitness(Individual individual, double areaFoglio, double alpha, double beta, List<Ordine> ordini) throws SoluzioneImpossibileException {
 
         //  int[] vettore = individual.getvettore();
         //int[] nessunFoglio = individual.getOrdiniByIndex(0);
@@ -78,10 +79,10 @@ public class GeneticAlgorithm {
         int[] foglio3 = individual.getOrdiniByIndex(3);
         int[] foglio4 = individual.getOrdiniByIndex(4);
 
-        double areaOrdiniFoglio1 = calculateAreaOrdiniByIndex(foglio1, ordini);
-        double areaOrdiniFoglio2 = calculateAreaOrdiniByIndex(foglio2, ordini);
-        double areaOrdiniFoglio3 = calculateAreaOrdiniByIndex(foglio3, ordini);
-        double areaOrdiniFoglio4 = calculateAreaOrdiniByIndex(foglio4, ordini);
+        double areaOrdiniFoglio1 = calculateAreaOrdiniByIndex(foglio1, ordini.toArray(new Ordine[ordini.size()]));
+        double areaOrdiniFoglio2 = calculateAreaOrdiniByIndex(foglio2, ordini.toArray(new Ordine[ordini.size()]));
+        double areaOrdiniFoglio3 = calculateAreaOrdiniByIndex(foglio3, ordini.toArray(new Ordine[ordini.size()]));
+        double areaOrdiniFoglio4 = calculateAreaOrdiniByIndex(foglio4, ordini.toArray(new Ordine[ordini.size()]));
 
         if (areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio || areaOrdiniFoglio3 > areaFoglio || areaOrdiniFoglio4 > areaFoglio) {
 //            System.out.println("areaOrdiniFoglio1  =  "+areaOrdiniFoglio1);
@@ -109,15 +110,15 @@ public class GeneticAlgorithm {
 */
         double costoSpreco = alpha * (sprecoFoglio1 + sprecoFoglio2 + sprecoFoglio3 + sprecoFoglio4);
         
-        double minDueDateFoglio1 = calculateMinExpirationDate(foglio1, ordini);
-        double minDueDateFoglio2 = calculateMinExpirationDate(foglio2, ordini);
-        double minDueDateFoglio3 = calculateMinExpirationDate(foglio3, ordini);
-        double minDueDateFoglio4 = calculateMinExpirationDate(foglio4, ordini);
+        double minDueDateFoglio1 = calculateMinExpirationDate(foglio1, ordini.toArray(new Ordine[ordini.size()]));
+        double minDueDateFoglio2 = calculateMinExpirationDate(foglio2, ordini.toArray(new Ordine[ordini.size()]));
+        double minDueDateFoglio3 = calculateMinExpirationDate(foglio3, ordini.toArray(new Ordine[ordini.size()]));
+        double minDueDateFoglio4 = calculateMinExpirationDate(foglio4, ordini.toArray(new Ordine[ordini.size()]));
 
-        double tempoElaborazioneFoglio1 = getSommaTempoRetinatura(foglio1, ordini);
-        double tempoElaborazioneFoglio2 = getSommaTempoRetinatura(foglio2, ordini);
-        double tempoElaborazioneFoglio3 = getSommaTempoRetinatura(foglio3, ordini);
-        double tempoElaborazioneFoglio4 = getSommaTempoRetinatura(foglio4, ordini);
+        double tempoElaborazioneFoglio1 = getSommaTempoRetinatura(foglio1, ordini.toArray(new Ordine[ordini.size()]));
+        double tempoElaborazioneFoglio2 = getSommaTempoRetinatura(foglio2, ordini.toArray(new Ordine[ordini.size()]));
+        double tempoElaborazioneFoglio3 = getSommaTempoRetinatura(foglio3, ordini.toArray(new Ordine[ordini.size()]));
+        double tempoElaborazioneFoglio4 = getSommaTempoRetinatura(foglio4, ordini.toArray(new Ordine[ordini.size()]));
 
         //qva
 //        if(individual.getvettore()[0] == 1){
@@ -160,10 +161,10 @@ public class GeneticAlgorithm {
         double ritardoFoglio3 = tempoCompletamentoF3 - minDueDateFoglio3 >= 0 ? tempoCompletamentoF3 - minDueDateFoglio3 : 0;
         double ritardoFoglio4 = tempoCompletamentoF4 - minDueDateFoglio4 >= 0 ? tempoCompletamentoF4 - minDueDateFoglio4 : 0;
   
-        double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini);
-        double sommatoriaIndicePriority2 = getSommaIndicePriorita(foglio2, ordini);
-        double sommatoriaIndicePriority3 = getSommaIndicePriorita(foglio3, ordini);
-        double sommatoriaIndicePriority4 = getSommaIndicePriorita(foglio4, ordini);
+        double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini.toArray(new Ordine[ordini.size()]));
+        double sommatoriaIndicePriority2 = getSommaIndicePriorita(foglio2, ordini.toArray(new Ordine[ordini.size()]));
+        double sommatoriaIndicePriority3 = getSommaIndicePriorita(foglio3, ordini.toArray(new Ordine[ordini.size()]));
+        double sommatoriaIndicePriority4 = getSommaIndicePriorita(foglio4, ordini.toArray(new Ordine[ordini.size()]));
 
         double costoPenalty = beta * (ritardoFoglio1 * sommatoriaIndicePriority1
                 + ritardoFoglio2 * sommatoriaIndicePriority2
@@ -206,7 +207,7 @@ public class GeneticAlgorithm {
     /*Valutiamo la popolazione attraverso un loop che calcola la fitness per ogni individuo
 * e dopo calcola la fitness dell'intera popolazione
      */
-    public void evalPopulation(Population population, double areaFoglio, double alpha, double beta, Ordine[] ordini) {
+    public void evalPopulation(Population population, double areaFoglio, double alpha, double beta, List<Ordine> ordini) {
 
         double populationFitness = 0;
 

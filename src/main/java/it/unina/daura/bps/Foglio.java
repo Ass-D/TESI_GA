@@ -4,8 +4,10 @@
  */
 package it.unina.daura.bps;
 
+import it.unina.daura.bps.utils.ConsoleColors;
 import java.util.LinkedList;
 import java.util.List;
+import org.fusesource.jansi.AnsiColors;
 
 /**
  *
@@ -56,6 +58,17 @@ public class Foglio {
 
     public double getSpessore() {
         return spessore;
+    }
+    
+    public void printOrdini(){
+        int i = 1;
+        System.out.println(ConsoleColors.ANSI_YELLOW+" >> Spessore: "+ConsoleColors.ANSI_RED+spessore+ConsoleColors.ANSI_RESET);
+        System.out.println(ConsoleColors.ANSI_YELLOW+" >> Totale ordini: "+ConsoleColors.ANSI_RED+ordini.size()+ConsoleColors.ANSI_RESET);
+        for (Ordine ordine : ordini) {
+            System.out.println(i+") "+ordine);
+            i++;
+        }
+        System.out.println(ConsoleColors.ANSI_YELLOW+" ================================================ "+ConsoleColors.ANSI_RESET);
     }
 
 }
