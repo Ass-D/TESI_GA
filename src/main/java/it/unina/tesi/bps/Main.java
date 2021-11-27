@@ -57,17 +57,27 @@ public class Main {
 
                     List<Foglio> fogli = FogliManager.getInstance().getAllFogli();
                     for (Foglio foglio : fogli) {
-                        System.out.println(ConsoleColors.ANSI_YELLOW + "-----------------------------------\n\n\n" + ConsoleColors.ANSI_RESET);
-                        System.out.println(ConsoleColors.ANSI_GREEN + "> H:\t\t" + ConsoleColors.ANSI_RED + foglio.getH() + ConsoleColors.ANSI_RESET);
-                        System.out.println(ConsoleColors.ANSI_GREEN + "> W:\t\t" + ConsoleColors.ANSI_RED + foglio.getW() + ConsoleColors.ANSI_RESET);
-                        System.out.println(ConsoleColors.ANSI_GREEN + "> alpha:\t" + ConsoleColors.ANSI_RED + foglio.getAlpha()+ ConsoleColors.ANSI_RESET);
-                        System.out.println(ConsoleColors.ANSI_GREEN + "> beta:\t\t" + ConsoleColors.ANSI_RED + foglio.getBeta()+ ConsoleColors.ANSI_RESET);
-                        System.out.println(ConsoleColors.ANSI_YELLOW + "-----------------------------------\n\n\n" + ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_YELLOW + "-----------------------------------" + ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_GREEN + " Foglio di Spessore: " + ConsoleColors.PURPLE_BRIGHT + foglio.getSpessore() + ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_GREEN + "      numero Ordini: " + ConsoleColors.PURPLE_BRIGHT + foglio.getOrdini().size() + ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_YELLOW + "-----------------------------------" + ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_GREEN + ">     H: " + ConsoleColors.ANSI_RED + foglio.getH() + ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_GREEN + ">     W: " + ConsoleColors.ANSI_RED + foglio.getW() + ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_GREEN + "> alpha: " + ConsoleColors.ANSI_RED + foglio.getAlpha() + ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_GREEN + ">  beta: " + ConsoleColors.ANSI_RED + foglio.getBeta() + ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_YELLOW + "-----------------------------------\n" + ConsoleColors.ANSI_RESET);
                         foglio.printOrdini();
                     }
+                    System.out.println(ConsoleColors.ANSI_YELLOW + "************************************************************************" + ConsoleColors.ANSI_RESET);
 
                     for (Foglio foglio : fogli) {
                         List<Ordine> ordini = foglio.getOrdini();
+                        if (ordini.isEmpty()) {
+                            System.out.println(ConsoleColors.ANSI_YELLOW + "----------------------------------------" + ConsoleColors.ANSI_RESET);
+                            System.out.println(ConsoleColors.ANSI_CYAN + "Questo foglio non contiene ordini. SKIP" + ConsoleColors.ANSI_RESET);
+                            System.out.println(ConsoleColors.ANSI_YELLOW + "----------------------------------------\n" + ConsoleColors.ANSI_RESET);
+                            continue;
+                        }
 
                         double areaFoglio = foglio.getH() * foglio.getW(); //area del foglio
 
