@@ -79,7 +79,7 @@ public class OrdiniFileReader {
             }
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+           // ex.printStackTrace();
            throw ex;
         } catch (CsvException ex) {
             ex.printStackTrace();

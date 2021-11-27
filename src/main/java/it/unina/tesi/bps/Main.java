@@ -49,7 +49,8 @@ public class Main {
                             break;
                         } catch (Exception ex) {
                             System.out.println(ConsoleColors.ANSI_RED + "Errore caricamento file, probabilmente hai sbagliato nome file" + ConsoleColors.ANSI_RESET);
-                            break;
+                            System.out.println(ConsoleColors.ANSI_YELLOW + "Inserisci il nome del file contenente i dati (senza estensione)" + ConsoleColors.ANSI_GREEN);
+                            nomeFile = reader.readLine();
                         }
                     }
                     System.out.println(ConsoleColors.ANSI_YELLOW + "File caricato con successo." + ConsoleColors.ANSI_RESET);
