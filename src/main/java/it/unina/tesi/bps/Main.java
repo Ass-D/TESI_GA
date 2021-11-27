@@ -136,7 +136,14 @@ public class Main {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                    
+                    System.out.println(ConsoleColors.ANSI_YELLOW + "-----------------------------------" + ConsoleColors.ANSI_RESET);
+                    System.out.println(ConsoleColors.ANSI_YELLOW + "                END\n" + ConsoleColors.ANSI_RESET);
+                    System.out.println(ConsoleColors.ANSI_YELLOW + "-----------------------------------\n\n" + ConsoleColors.ANSI_RESET);
+                    System.out.println(ConsoleColors.ANSI_YELLOW + "Inserisci comando (start per iniziare)." + ConsoleColors.ANSI_GREEN);
 
+                }else{
+                     System.out.println(ConsoleColors.ANSI_RED + "Errore, comando sconosciuto." + ConsoleColors.ANSI_RESET);
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
