@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 public class Main {
 
-    public static int maxGenerations = 100; // massimo num. di iterazioni per la terminazione
+    public static int maxGenerations = 1000; // massimo num. di iterazioni per la terminazione
 
     public static void main(String[] args) {
 
