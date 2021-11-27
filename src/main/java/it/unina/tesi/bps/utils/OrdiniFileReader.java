@@ -7,7 +7,7 @@ package it.unina.tesi.bps.utils;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import it.unina.tesi.bps.FogliManager;
-import it.unina.tesi.bps.Foglio;
+import it.unina.tesi.bps.FoglioType;
 import it.unina.tesi.bps.Main;
 import it.unina.tesi.bps.Ordine;
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class OrdiniFileReader {
                         double alpha    = Double.parseDouble(split[3]);
                         double beta     = Double.parseDouble(split[4]);
                         double spessore     = Double.parseDouble(split[0]);
-                        Foglio foglio = new Foglio(foglioH, foglioW, alpha, beta, spessore);
+                        FoglioType foglio = new FoglioType(foglioH, foglioW, alpha, beta, spessore);
                         FogliManager.getInstance().mapFoglio(foglio);
                         linesAvoided++;
                         continue;

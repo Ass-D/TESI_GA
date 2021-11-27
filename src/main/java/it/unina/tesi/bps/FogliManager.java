@@ -18,7 +18,7 @@ public class FogliManager {
     
     private static FogliManager _instance = null;
 //    private Map<Double,List<Ordine>> ordiniPerSpessoreMap = new HashMap<>();
-    private Map<Double, Foglio> fogliPerSpessoreMap = new HashMap<>();
+    private Map<Double, FoglioType> fogliPerSpessoreMap = new HashMap<>();
     
     public static FogliManager getInstance() {
         if (_instance == null) {
@@ -37,11 +37,11 @@ public class FogliManager {
         fogliPerSpessoreMap.clear();
     }
     
-    public List<Foglio> getAllFogli(){
+    public List<FoglioType> getAllFogli(){
         return this.fogliPerSpessoreMap.values().stream().collect(toList());
     }
     
-    public Foglio getFoglioBySpessore(double spessore){
+    public FoglioType getFoglioBySpessore(double spessore){
         return this.fogliPerSpessoreMap.get(spessore);
     }
     
@@ -49,13 +49,13 @@ public class FogliManager {
         return this.fogliPerSpessoreMap.get(spessore).getOrdini();
     }
     
-    public void mapFoglio(Foglio foglio){
+    public void mapFoglio(FoglioType foglio){
         System.out.println("FOGLIO is null ? "+foglio == null);
         System.out.println("SPESSORE: "+foglio.getSpessore());
         this.fogliPerSpessoreMap.put(foglio.getSpessore(), foglio);
     }
     
-    public void putOrdineInMap(Ordine ordine, Foglio foglio){
+    public void putOrdineInMap(Ordine ordine, FoglioType foglio){
         if(!this.fogliPerSpessoreMap.containsKey(foglio.getSpessore())){
             this.fogliPerSpessoreMap.put(foglio.getSpessore(),foglio);
         }

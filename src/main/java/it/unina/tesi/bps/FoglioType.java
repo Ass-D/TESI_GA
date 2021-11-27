@@ -13,7 +13,7 @@ import org.fusesource.jansi.AnsiColors;
  *
  * @author sommovir
  */
-public class Foglio {
+public class FoglioType {
 
     public final double H; //altezza del foglio
     public final double W; //larghezza del foglio
@@ -23,7 +23,7 @@ public class Foglio {
     public final double spessore;
     public List<Ordine> ordini;
 
-    public Foglio(double H, double W, double alpha, double beta, double spessore) {
+    public FoglioType(double H, double W, double alpha, double beta, double spessore) {
         this.H = H;
         this.W = W;
         this.alpha = alpha;

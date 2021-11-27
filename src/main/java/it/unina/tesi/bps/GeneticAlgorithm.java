@@ -74,10 +74,17 @@ public class GeneticAlgorithm {
 
         //  int[] vettore = individual.getvettore();
         //int[] nessunFoglio = individual.getOrdiniByIndex(0);
-        int[] foglio1 = individual.getOrdiniByIndex(1);
-        int[] foglio2 = individual.getOrdiniByIndex(2);
-        int[] foglio3 = individual.getOrdiniByIndex(3);
-        int[] foglio4 = individual.getOrdiniByIndex(4);
+        int[] foglio1 = null;
+        int[] foglio2 = null;
+        int[] foglio3 = null;
+        int[] foglio4 = null;
+
+        List<Integer> sequenzaFogli = individual.getSequenzaFogli();
+
+        foglio1 = individual.getOrdiniByIndex(sequenzaFogli.get(0));
+        foglio2 = individual.getOrdiniByIndex(sequenzaFogli.get(1));
+        foglio3 = individual.getOrdiniByIndex(sequenzaFogli.get(2));
+        foglio4 = individual.getOrdiniByIndex(sequenzaFogli.get(3));
 
         double areaOrdiniFoglio1 = calculateAreaOrdiniByIndex(foglio1, ordini.toArray(new Ordine[ordini.size()]));
         double areaOrdiniFoglio2 = calculateAreaOrdiniByIndex(foglio2, ordini.toArray(new Ordine[ordini.size()]));
@@ -100,16 +107,20 @@ public class GeneticAlgorithm {
         double sprecoFoglio2 = (areaFoglio - areaOrdiniFoglio2) / areaFoglio;
         double sprecoFoglio3 = (areaFoglio - areaOrdiniFoglio3) / areaFoglio;
         double sprecoFoglio4 = (areaFoglio - areaOrdiniFoglio4) / areaFoglio;
-        
-        
+
 ////ASSUNTA:  VORREI INSERIRE ANCHE QUESTO VINCOLO come quello sopra
-/*
-        if (sprecoFoglio1 >= 0.25 || sprecoFoglio2 >= 0.25 || sprecoFoglio3 >= 0.25 ){
-            throw new SoluzioneImpossibileException2('L indice di utilizzo del foglio è troppo basso');
+        if (sprecoFoglio1 >= 0.25 || sprecoFoglio2 >= 0.25 || sprecoFoglio3 >= 0.25) {
+            throw new SoluzioneImpossibileException("L indice di utilizzo del foglio è troppo basso");
         }
-*/
-        double costoSpreco = alpha * (sprecoFoglio1 + sprecoFoglio2 + sprecoFoglio3 + sprecoFoglio4);
         
+        /* LUCA CONTROLLA QUA
+        if(areaFoglio ==  areaOrdiniFoglio1){
+            sprecoFoglio1 = -sprecoFoglio1;
+        }
+        */
+
+        double costoSpreco = alpha * (sprecoFoglio1 + sprecoFoglio2 + sprecoFoglio3 + sprecoFoglio4);
+
         double minDueDateFoglio1 = calculateMinExpirationDate(foglio1, ordini.toArray(new Ordine[ordini.size()]));
         double minDueDateFoglio2 = calculateMinExpirationDate(foglio2, ordini.toArray(new Ordine[ordini.size()]));
         double minDueDateFoglio3 = calculateMinExpirationDate(foglio3, ordini.toArray(new Ordine[ordini.size()]));
@@ -124,16 +135,15 @@ public class GeneticAlgorithm {
 //        if(individual.getvettore()[0] == 1){
 //            double c1 = tempoElaborazioneFoglio1; asdoòhashd
 //        }
-   // TEMPI DI COMPLETAMENTO DEI FOGLI
-   
-       double tempoCompletamentoF1 = tempoElaborazioneFoglio1;
-       double tempoCompletamentoF2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
-       double tempoCompletamentoF3 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3;
-       double tempoCompletamentoF4 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3 + tempoElaborazioneFoglio4;
+        // TEMPI DI COMPLETAMENTO DEI FOGLI
+        double tempoCompletamentoF1 = tempoElaborazioneFoglio1;
+        double tempoCompletamentoF2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
+        double tempoCompletamentoF3 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3;
+        double tempoCompletamentoF4 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3 + tempoElaborazioneFoglio4;
 
 // ASSUNTA - IL CONCETTO DELLA MAPPA METTO A COMMENTO PERCHè DEVO VALUTARE QUALE CONCETTO MI AIUTA DI PIù. 
 // SE DECIDERE IO LA SEQUENZA SEMPRE di 1-2-3-4 COME FATTO ALL'INIZIO O FARLA VALUTARE ALL' ALGORITMO
-  /*     Map<Integer, Double> tempiElabMap = individual.getTempiDiElaborazione(ordini);
+        /*     Map<Integer, Double> tempiElabMap = individual.getTempiDiElaborazione(ordini);
 
         //TODO RENDERE GENERICA QUESTA PARTE 
         double ritardoFoglio1 = 0;
@@ -152,15 +162,13 @@ public class GeneticAlgorithm {
         if (tempiElabMap.containsKey(4)) {
             ritardoFoglio4 = tempiElabMap.get(4) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(4) - minDueDateFoglio1 : 0;
         }
-*/
-  
-  // RITARDO FOGLI
-  
+         */
+        // RITARDO FOGLI
         double ritardoFoglio1 = tempoCompletamentoF1 - minDueDateFoglio1 >= 0 ? tempoCompletamentoF1 - minDueDateFoglio1 : 0;
         double ritardoFoglio2 = tempoCompletamentoF2 - minDueDateFoglio2 >= 0 ? tempoCompletamentoF2 - minDueDateFoglio2 : 0;
         double ritardoFoglio3 = tempoCompletamentoF3 - minDueDateFoglio3 >= 0 ? tempoCompletamentoF3 - minDueDateFoglio3 : 0;
         double ritardoFoglio4 = tempoCompletamentoF4 - minDueDateFoglio4 >= 0 ? tempoCompletamentoF4 - minDueDateFoglio4 : 0;
-  
+
         double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini.toArray(new Ordine[ordini.size()]));
         double sommatoriaIndicePriority2 = getSommaIndicePriorita(foglio2, ordini.toArray(new Ordine[ordini.size()]));
         double sommatoriaIndicePriority3 = getSommaIndicePriorita(foglio3, ordini.toArray(new Ordine[ordini.size()]));
@@ -170,7 +178,7 @@ public class GeneticAlgorithm {
                 + ritardoFoglio2 * sommatoriaIndicePriority2
                 + ritardoFoglio3 * sommatoriaIndicePriority3
                 + ritardoFoglio4 * sommatoriaIndicePriority4);
-        
+
 ////Calcoliamo la fitness
         double fitness = costoSpreco + costoPenalty;
 
@@ -351,7 +359,7 @@ public class GeneticAlgorithm {
         double areaOrdiniFoglio3 = calculateAreaOrdiniByIndex(foglio3, ordini);
         double areaOrdiniFoglio4 = calculateAreaOrdiniByIndex(foglio4, ordini);
 
-        if (areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio || areaOrdiniFoglio3 > areaFoglio|| areaOrdiniFoglio4 > areaFoglio) {
+        if (areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio || areaOrdiniFoglio3 > areaFoglio || areaOrdiniFoglio4 > areaFoglio) {
             throw new SoluzioneImpossibileException("La somma delle aree degli ordini non può eccedere l'area del foglio");
         }
 
@@ -360,7 +368,7 @@ public class GeneticAlgorithm {
         double sprecoFoglio3 = (areaFoglio - areaOrdiniFoglio3) / areaFoglio;
         double sprecoFoglio4 = (areaFoglio - areaOrdiniFoglio4) / areaFoglio;
 
-        double costoSpreco = alpha * (sprecoFoglio1 + sprecoFoglio2+ sprecoFoglio3+ sprecoFoglio4);
+        double costoSpreco = alpha * (sprecoFoglio1 + sprecoFoglio2 + sprecoFoglio3 + sprecoFoglio4);
 
         double minDueDateFoglio1 = calculateMinExpirationDate(foglio1, ordini);
         double minDueDateFoglio2 = calculateMinExpirationDate(foglio2, ordini);
@@ -372,27 +380,25 @@ public class GeneticAlgorithm {
         double tempoElaborazioneFoglio3 = getSommaTempoRetinatura(foglio3, ordini);
         double tempoElaborazioneFoglio4 = getSommaTempoRetinatura(foglio4, ordini);
 
-       double tempoCompletamentoF1 = tempoElaborazioneFoglio1;
-       double tempoCompletamentoF2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
-       double tempoCompletamentoF3 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3;
-       double tempoCompletamentoF4 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3 + tempoElaborazioneFoglio4;
+        double tempoCompletamentoF1 = tempoElaborazioneFoglio1;
+        double tempoCompletamentoF2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
+        double tempoCompletamentoF3 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3;
+        double tempoCompletamentoF4 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3 + tempoElaborazioneFoglio4;
 
-     
         double ritardoFoglio1 = tempoCompletamentoF1 - minDueDateFoglio1 >= 0 ? tempoCompletamentoF1 - minDueDateFoglio1 : 0;
         double ritardoFoglio2 = tempoCompletamentoF2 - minDueDateFoglio2 >= 0 ? tempoCompletamentoF2 - minDueDateFoglio2 : 0;
         double ritardoFoglio3 = tempoCompletamentoF3 - minDueDateFoglio3 >= 0 ? tempoCompletamentoF3 - minDueDateFoglio3 : 0;
         double ritardoFoglio4 = tempoCompletamentoF4 - minDueDateFoglio4 >= 0 ? tempoCompletamentoF4 - minDueDateFoglio4 : 0;
-  
+
         double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini);
         double sommatoriaIndicePriority2 = getSommaIndicePriorita(foglio2, ordini);
         double sommatoriaIndicePriority3 = getSommaIndicePriorita(foglio3, ordini);
-        double sommatoriaIndicePriority4 = getSommaIndicePriorita(foglio4, ordini); 
-        
-        double costoPenalty = beta * (ritardoFoglio1 * sommatoriaIndicePriority1 + 
-                ritardoFoglio2 * sommatoriaIndicePriority2 + 
-                ritardoFoglio3 * sommatoriaIndicePriority3 + 
-                ritardoFoglio4 * sommatoriaIndicePriority4);
-        
+        double sommatoriaIndicePriority4 = getSommaIndicePriorita(foglio4, ordini);
+
+        double costoPenalty = beta * (ritardoFoglio1 * sommatoriaIndicePriority1
+                + ritardoFoglio2 * sommatoriaIndicePriority2
+                + ritardoFoglio3 * sommatoriaIndicePriority3
+                + ritardoFoglio4 * sommatoriaIndicePriority4);
 
         return costoSpreco + costoPenalty;
 

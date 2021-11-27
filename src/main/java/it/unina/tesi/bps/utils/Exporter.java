@@ -81,12 +81,14 @@ public class Exporter {
         long h = elaps.toHoursPart();
         long m = elaps.toMinutesPart();
         long s = elaps.toSecondsPart();
+        long ss = elaps.toMillisPart();
         export("----------------------------------------------------------------");
         export("Elapsed Time: " + " " + h + "h "
                 + m + "m "
-                + s + "s ");
+                + s + "s "
+                + ss + "ms ");
         export("----------------------------------------------------------------");
-        currentLogPath = null;
+        //currentLogPath = null;
         this.startingLoggingTime = -1;
     }
 

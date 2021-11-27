@@ -11,16 +11,30 @@ public class Individual {
 
     private int[] vettore;
     private double fitness = -1;
+    private List<Integer> sequenzaFogli = new LinkedList<>();
 
     public Individual(int[] vettore) {
 
         // Creiamo il cromosoma (vettore)
         this.vettore = vettore;
+        for (int foglio : vettore) {
+            if (sequenzaFogli.isEmpty()) {
+                sequenzaFogli.add(foglio);
+            } else {
+                if (!sequenzaFogli.contains(foglio)) {
+                    sequenzaFogli.add(foglio);
+                }
+            }
+        }
+    }
+
+    public List<Integer> getSequenzaFogli() {
+        return sequenzaFogli;
     }
 
     public int[] getOrdiniByIndex(int index) {
         if (index < 1 || index > 4) {
-            throw new IllegalArgumentException("l'indice deve essere compreso tra 1 e 4 ["+index+"]");
+            throw new IllegalArgumentException("l'indice deve essere compreso tra 1 e 4 [" + index + "]");
         }
         List<Integer> result = new ArrayList<>();
 
@@ -29,71 +43,60 @@ public class Individual {
                 result.add(i);
             }
         }
-        return result.stream().mapToInt(i->i).toArray();
+        return result.stream().mapToInt(i -> i).toArray();
 
     }
-    
-    public List<Ordine> getOrdiniByFoglio(Ordine [] ordini, int foglio){
+
+    public List<Ordine> getOrdiniByFoglio(Ordine[] ordini, int foglio) {
         List<Ordine> result = new LinkedList<>();
-        
+
         int i = 0;
         for (int index : vettore) {
-            if(index == foglio){
+            if (index == foglio) {
                 result.add(ordini[i]);
             }
             i++;
         }
-        
+
         return result;
     }
-    
-    private double sumTempiElaborazione(List<Ordine> ordini){
+
+    private double sumTempiElaborazione(List<Ordine> ordini) {
         double d = 0;
         for (Ordine ordine : ordini) {
-            d+=ordine.tempoElaborazioneRetinatura();
+            d += ordine.tempoElaborazioneRetinatura();
         }
         return d;
     }
-    /*
-    public Map<Integer,Double> getTempiDiElaborazione(Ordine [] ordini){
-        List<Integer> sequenzaFogli = new LinkedList<>();
-        for (int foglio : vettore) {
-            if(sequenzaFogli.isEmpty()){
-                sequenzaFogli.add(foglio);
-            }else{
-                if(!sequenzaFogli.contains(foglio)){
-                    sequenzaFogli.add(foglio);
-                }
-            }
-        }
+
+    public Map<Integer, Double> getTempiDiElaborazione(Ordine[] ordini) {
+
         //double [] ritardiResult = new double[sequenzaFogli.size()];
-        Map<Integer,Double> mapResult = new HashMap<>();
-        
+        Map<Integer, Double> mapResult = new HashMap<>();
+
         List<Ordine> ordiniPrimoFoglio = getOrdiniByFoglio(ordini, sequenzaFogli.get(0));
-        
+
         mapResult.put(sequenzaFogli.get(0), sumTempiElaborazione(ordiniPrimoFoglio));
-        
+
         for (int i = 1; i < sequenzaFogli.size(); i++) {
             List<Ordine> ordiniPerFoglio = getOrdiniByFoglio(ordini, sequenzaFogli.get(i));
             //ritardiResult[i] = ritardiResult[i-1] + sumTempiElaborazione(ordiniPerFoglio);
-            double tempoElaborazionePrecedente = mapResult.get(sequenzaFogli.get(i-1));
-            
-            mapResult.put(sequenzaFogli.get(i), tempoElaborazionePrecedente+ sumTempiElaborazione(ordiniPerFoglio));
+            double tempoElaborazionePrecedente = mapResult.get(sequenzaFogli.get(i - 1));
+
+            mapResult.put(sequenzaFogli.get(i), tempoElaborazionePrecedente + sumTempiElaborazione(ordiniPerFoglio));
         }
         return mapResult;
-        
-    } */
 
-    
+    }
+
     // Inizializziamo in modo randomico. Creiamo un vettore che sia composto da numeri che vanno da 1 a 4
-    
     public Individual(int vettoreLength) {
 
         this.vettore = new int[vettoreLength];
         for (int i = 0; i < vettoreLength; i++) {
-            vettore[i] = ((int) ((Math.random() * 100) % 4) +1); //riempe il vettore con numeri casuali tra {1,2,3,4}
+            vettore[i] = ((int) ((Math.random() * 100) % 4) + 1); //riempe il vettore con numeri casuali tra {1,2,3,4}
         }
-      // System.out.println("INDIVIDUAL: "+this);
+        // System.out.println("INDIVIDUAL: "+this);
     }
 
 //Otteniamo il cromosoma dell'individuo e la sua lunghezza 

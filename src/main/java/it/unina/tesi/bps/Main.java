@@ -66,8 +66,8 @@ public class Main {
                     try {
                         Exporter.getInstance().export("File caricato con successo.");
 
-                        List<Foglio> fogli = FogliManager.getInstance().getAllFogli();
-                        for (Foglio foglio : fogli) {
+                        List<FoglioType> fogli = FogliManager.getInstance().getAllFogli();
+                        for (FoglioType foglio : fogli) {
                             System.out.println(ConsoleColors.ANSI_YELLOW + "-----------------------------------" + ConsoleColors.ANSI_RESET);
                             System.out.println(ConsoleColors.ANSI_GREEN + " Foglio di Spessore: " + ConsoleColors.PURPLE_BRIGHT + foglio.getSpessore() + ConsoleColors.ANSI_RESET);
                             System.out.println(ConsoleColors.ANSI_GREEN + "      numero Ordini: " + ConsoleColors.PURPLE_BRIGHT + foglio.getOrdini().size() + ConsoleColors.ANSI_RESET);
@@ -81,7 +81,7 @@ public class Main {
                         }
                         System.out.println(ConsoleColors.ANSI_YELLOW + "************************************************************************" + ConsoleColors.ANSI_RESET);
 
-                        for (Foglio foglio : fogli) {
+                        for (FoglioType foglio : fogli) {
                             List<Ordine> ordini = foglio.getOrdini();
                             if (ordini.isEmpty()) {
                                 System.out.println(ConsoleColors.ANSI_YELLOW + "----------------------------------------" + ConsoleColors.ANSI_RESET);
@@ -155,6 +155,11 @@ public class Main {
                     System.out.println(ConsoleColors.ANSI_YELLOW + "                END\n" + ConsoleColors.ANSI_RESET);
                     System.out.println(ConsoleColors.ANSI_YELLOW + "-----------------------------------\n\n" + ConsoleColors.ANSI_RESET);
                     System.out.println(ConsoleColors.ANSI_YELLOW + "Inserisci comando (start per iniziare)." + ConsoleColors.ANSI_GREEN);
+                    try {
+                        Exporter.getInstance().stopExporting();
+                    } catch (InvalidAttemptToExportException ex) {
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
                 } else {
                     System.out.println(ConsoleColors.ANSI_RED + "Errore, comando sconosciuto." + ConsoleColors.ANSI_RESET);
