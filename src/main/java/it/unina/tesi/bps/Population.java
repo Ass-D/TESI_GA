@@ -42,14 +42,31 @@ public class Population {
         return this.population;
     }
 
+    private void eliminateNulls(){
+        List<Individual> list = new LinkedList<>();
+        for (Individual individual : this.population) {
+            if(individual != null){
+                list.add(individual);
+            }
+        }
+        this.population = list.toArray(new Individual[list.size()]);
+    }
+    
+    
     /*Cerchiamo un individuo nella popolazione attraverso la sua fitness, ordinando la popolazione 
 	*  attraverso la fitness e facciamoci restituire l'individuo pi� adatto (fittest)
      */
     public Individual getFittest(int offset) {
+        
+        eliminateNulls();
 
+        if(this.population.length == 0){
+            return null;
+        }
         Arrays.sort(this.population, new Comparator<Individual>() {
             @Override
             public int compare(Individual o1, Individual o2) {
+                
                 if (o1.getFitness() > o2.getFitness()) {
                     return -1;
                 } else if (o1.getFitness() < o2.getFitness()) {
@@ -117,9 +134,9 @@ public class Population {
         }
         this.population = survivors.toArray(new Individual[survivors.size()]);
         
-        if(population.length == 0){
-            JOptionPane.showMessageDialog(null, "ZERO POPULATION");
-        }
+//        if(population.length == 0){
+//            JOptionPane.showMessageDialog(null, "ZERO POPULATION");
+//        }
         
         
     }

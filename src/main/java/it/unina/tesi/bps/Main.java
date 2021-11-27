@@ -113,6 +113,10 @@ public class Main {
 
 //Stampiamo l'individuo più in forma 
                                 Individual fittest = population.getFittest(0);
+                                if(fittest == null){
+//                                    System.out.println("ehm..");
+                                    continue;
+                                }
                                 System.out.println(
                                         "G" + generation + " Best solution (" + fittest.getFitness() + ")");
 
@@ -133,8 +137,12 @@ public class Main {
                                 System.out.println("La fitness è: " + fittest.getFitness());
                             }
 
-                            System.out.println("La soluzione migliore è: " + population.getFittest(0));
+                            Individual fittest = population.getFittest(0);
+                            System.out.println("La soluzione migliore è: " + fittest);
                             System.out.println("====================================================");
+                            Exporter.getInstance().export("Foglio di spessore: " + foglio.getSpessore()+" con "+foglio.getOrdini().size()+ " ordini");
+                            Exporter.getInstance().export("La soluzione migliore è: " + fittest);
+                            Exporter.getInstance().export("====================================================");
                             System.out.println("Le altre soluzioni: ");
                             int i = 0;
                             for (Individual individual : population.getIndividuals()) {

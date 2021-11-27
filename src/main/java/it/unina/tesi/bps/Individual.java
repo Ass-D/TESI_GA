@@ -1,5 +1,7 @@
 package it.unina.tesi.bps;
 
+import it.unina.tesi.bps.exceptions.InvalidAttemptToExportException;
+import it.unina.tesi.bps.utils.Exporter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class Individual {
@@ -90,7 +94,7 @@ public class Individual {
             }
             i++;
         }
-
+        
         return result;
     }
 
@@ -152,9 +156,6 @@ public class Individual {
 
 //Memorizziamo e otteniamo la fitness di un individuo
     public void setFitness(double fitness) {
-        if(fitness == -1){
-            JOptionPane.showMessageDialog(null, "NOOOO");
-        }
         this.fitness = fitness;
     }
 

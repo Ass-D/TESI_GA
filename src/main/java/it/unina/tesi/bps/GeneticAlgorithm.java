@@ -80,7 +80,10 @@ public class GeneticAlgorithm {
         int[] foglio3 = null;
         int[] foglio4 = null;
 
-        //System.out.println("individual : "+individual);
+        if(individual == null){
+            return 0;
+        }
+//        System.out.println(" <<<<individual : "+individual);
         List<Integer> sequenzaFogli = individual.getSequenzaFogli();
 
         int numFogli = sequenzaFogli.size();
@@ -102,7 +105,7 @@ public class GeneticAlgorithm {
 //            System.out.println("areaOrdiniFoglio2  =  "+areaOrdiniFoglio2);
 //            System.out.println("areaFoglio  =  "+areaFoglio);
 //            System.out.println("============================================");
-            JOptionPane.showMessageDialog(null, "NOOOO");
+//            JOptionPane.showMessageDialog(null, "NOOOO");
             individual.setZombie(true);
             throw new SoluzioneImpossibileException("La somma delle aree degli ordini non può eccedere l'area del foglio");
         } else {
