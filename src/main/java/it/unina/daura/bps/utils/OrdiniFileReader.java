@@ -2,10 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package it.unina.daura.bps.files;
+package it.unina.daura.bps.utils;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import it.unina.daura.bps.Main;
 import it.unina.daura.bps.Ordine;
 import java.io.IOException;
 import java.util.Arrays;
@@ -20,9 +21,11 @@ import java.io.FileReader;
  */
 public class OrdiniFileReader {
 
-    public static Ordine[] readFile(String file) {
+    public static Ordine[] readFile(String file) throws IOException, CsvException {
 
         Ordine[] ordini = new Ordine[30];
+        int linesToAvoid = 3;
+        int linesAvoided = 0;
         int lineParsed = 0;
         try ( CSVReader reader = new CSVReader(new FileReader(file))) {
             List<String[]> allLines = reader.readAll();
@@ -32,9 +35,16 @@ public class OrdiniFileReader {
             for (String[] lines : allLines) {
                 //[1;44;82;1, 00;10;0, 14;;;;;]
 
-                
                 for (String line : lines) {
-                    if (line.contains("N.ordine")) {
+                    if (linesAvoided == 1) {
+                        String[] split = line.split(";");
+                        Main.foglio_H = Double.parseDouble(split[0]);
+                        Main.foglio_W = Double.parseDouble(split[1]);
+                        Main.alpha    = Double.parseDouble(split[2]);
+                        Main.beta     = Double.parseDouble(split[3]);
+                    }
+                    if (linesAvoided < linesToAvoid) {
+                        linesAvoided++;
                         continue;
                     }
                     //System.out.println("LINE : " + line);
@@ -48,7 +58,7 @@ public class OrdiniFileReader {
                     );
                     ordini[lineParsed] = ordine;
                     lineParsed++;
-                    if(lineParsed == 30){
+                    if (lineParsed == 30) {
                         return ordini;
                     }
                 }
@@ -59,9 +69,9 @@ public class OrdiniFileReader {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(FileReader.class.getName()).log(Level.SEVERE, null, ex);
+           throw ex;
         } catch (CsvException ex) {
-            Logger.getLogger(FileReader.class.getName()).log(Level.SEVERE, null, ex);
+           throw ex;
         }
 
         return ordini;
