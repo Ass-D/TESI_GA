@@ -1,6 +1,7 @@
-package it.cnr.istc.gen.duericariche;
+package it.unina.daura.bps;
 
-import it.cnr.istc.gen.duericariche.files.OrdiniFileReader;
+import it.unina.daura.bps.exceptions.SoluzioneImpossibileException;
+import it.unina.daura.bps.files.OrdiniFileReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

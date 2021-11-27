@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package it.cnr.istc.gen.duericariche.files;
+package it.unina.daura.bps.files;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import it.cnr.istc.gen.duericariche.Ordine;
+import it.unina.daura.bps.Ordine;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;

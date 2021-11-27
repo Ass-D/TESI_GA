@@ -1,5 +1,6 @@
-package it.cnr.istc.gen.duericariche;
+package it.unina.daura.bps;
 
+import it.unina.daura.bps.exceptions.SoluzioneImpossibileException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;

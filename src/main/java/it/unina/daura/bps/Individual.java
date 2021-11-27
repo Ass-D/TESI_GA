@@ -1,4 +1,4 @@
-package it.cnr.istc.gen.duericariche;
+package it.unina.daura.bps;
 
 import java.util.ArrayList;
 import java.util.Collections;
