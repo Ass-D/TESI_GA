@@ -6,6 +6,8 @@ package it.unina.daura.bps.utils;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import it.unina.daura.bps.FogliManager;
+import it.unina.daura.bps.Foglio;
 import it.unina.daura.bps.Main;
 import it.unina.daura.bps.Ordine;
 import java.io.IOException;
@@ -24,7 +26,7 @@ public class OrdiniFileReader {
     public static Ordine[] readFile(String file) throws IOException, CsvException {
 
         Ordine[] ordini = new Ordine[30];
-        int linesToAvoid = 3;
+        int linesToAvoid = 7;
         int linesAvoided = 0;
         int lineParsed = 0;
         try ( CSVReader reader = new CSVReader(new FileReader(file))) {
@@ -36,12 +38,15 @@ public class OrdiniFileReader {
                 //[1;44;82;1, 00;10;0, 14;;;;;]
 
                 for (String line : lines) {
-                    if (linesAvoided == 1) {
+                    if (linesAvoided >= 1 && linesToAvoid < 7) {
                         String[] split = line.split(";");
-                        Main.foglio_H = Double.parseDouble(split[0]);
-                        Main.foglio_W = Double.parseDouble(split[1]);
-                        Main.alpha    = Double.parseDouble(split[2]);
-                        Main.beta     = Double.parseDouble(split[3]);
+                        double foglioH = Double.parseDouble(split[1]);
+                        double foglioW = Double.parseDouble(split[2]);
+                        double alpha    = Double.parseDouble(split[3]);
+                        double beta     = Double.parseDouble(split[4]);
+                        double spessore     = Double.parseDouble(split[0]);
+                        Foglio foglio = new Foglio(foglioH, foglioW, alpha, beta, spessore);
+                        FogliManager.getInstance().mapFoglio(foglio);
                     }
                     if (linesAvoided < linesToAvoid) {
                         linesAvoided++;
@@ -57,6 +62,8 @@ public class OrdiniFileReader {
                             Double.parseDouble(split[5])
                     );
                     ordini[lineParsed] = ordine;
+                    double spessore = Double.parseDouble(split[6]);
+                    FogliManager.getInstance().putOrdineInMap(ordine, FogliManager.getInstance().getFoglioBySpessore(spessore));
                     lineParsed++;
                     if (lineParsed == 30) {
                         return ordini;
