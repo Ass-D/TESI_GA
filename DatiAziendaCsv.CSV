@@ -1,3 +1,9 @@
+H;W;alpha;beta;;;;
+1.14;127;203;451.6;82.5;;;;
+1.14;127;203;451.6;82.5;;;;
+1.14;127;203;451.6;82.5;;;;
+1.14;127;203;451.6;82.5;;;;
+1.14;127;203;451.6;82.5;;;;
 N.ordine;Larghezza (w);Altezza (h);PESO (p);due date;retinatura r;Spessore;Nome ordine;;
 1;44;82;1;10;3.88889E-05;1.14;8bch grosmi;;
 2;44;82;1;10;5.55556E-05;1.14;8bch grosmi;;
@@ -187,8 +193,8 @@ N.ordine;Larghezza (w);Altezza (h);PESO (p);due date;retinatura r;Spessore;Nome 
 186;49;109;1;9;8.33333E-05;1.14;bit670886 27wc delonghi;;
 187;50;110;1;9;8.33333E-05;1.14;c81690005 it1200 kfcro;;
 188;50;110;1;9;8.33333E-05;1.14;c81690005 it1200 kfcro;;
-189;44;49;1;9;8.33333E-05;1.14;8bch barà;;
-190;44;49;1;9;6.94444E-05;1.14;8bch barà;;
+189;44;49;1;9;8.33333E-05;1.14;8bch barï¿½;;
+190;44;49;1;9;6.94444E-05;1.14;8bch barï¿½;;
 191;47;55;1;9;8.33333E-05;1.14;7ozh nescafe;;
 192;47;55;1;9;5.55556E-05;1.14;7ozh nescafe;;
 193;23;23;0.75;6;5.55556E-05;2.84;artedeisalumi;;
@@ -398,7 +404,7 @@ N.ordine;Larghezza (w);Altezza (h);PESO (p);due date;retinatura r;Spessore;Nome 
 397;28;53;0.75;6;6.94444E-05;2.84;carta e cart.;;
 398;28;53;0.75;6;5.55556E-05;2.84;carta e cart.;;
 399;33;30;0.75;6;5.55556E-05;2.84;estetica essential;;
-400;17;15;0.75;6;4.44444E-05;2.84;caffè dell'amore;;
+400;17;15;0.75;6;4.44444E-05;2.84;caffï¿½ dell'amore;;
 401;24;20;0.75;6;4.44444E-05;2.84;il max del gelato;;
 402;24;20;0.75;6;4.44444E-05;2.84;il max del gelato;;
 403;28;20;0.75;6;4.44444E-05;2.84;il max del gelato;;
