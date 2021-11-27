@@ -42,7 +42,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>it.cnr.istc.gen.duericariche.Main</mainClass>
+                            <mainClass>it.unina.daura.bps.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
