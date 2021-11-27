@@ -1,8 +1,8 @@
-package it.unina.daura.bps;
+package it.unina.tesi.bps;
 
-import it.unina.daura.bps.exceptions.SoluzioneImpossibileException;
-import it.unina.daura.bps.utils.ConsoleColors;
-import it.unina.daura.bps.utils.OrdiniFileReader;
+import it.unina.tesi.bps.exceptions.SoluzioneImpossibileException;
+import it.unina.tesi.bps.utils.ConsoleColors;
+import it.unina.tesi.bps.utils.OrdiniFileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

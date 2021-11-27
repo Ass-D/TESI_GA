@@ -2,14 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package it.unina.daura.bps.utils;
+package it.unina.tesi.bps.utils;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import it.unina.daura.bps.FogliManager;
-import it.unina.daura.bps.Foglio;
-import it.unina.daura.bps.Main;
-import it.unina.daura.bps.Ordine;
+import it.unina.tesi.bps.FogliManager;
+import it.unina.tesi.bps.Foglio;
+import it.unina.tesi.bps.Main;
+import it.unina.tesi.bps.Ordine;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
