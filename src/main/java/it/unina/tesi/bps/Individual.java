@@ -3,15 +3,19 @@ package it.unina.tesi.bps;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import javax.swing.JOptionPane;
 
 public class Individual {
 
     private int[] vettore;
-    private double fitness = -1;
+    private double fitness = -5;
     private List<Integer> sequenzaFogli = new LinkedList<>();
+    private boolean zombie = false;
 
     public Individual(int[] vettore) {
 
@@ -28,7 +32,36 @@ public class Individual {
         }
     }
 
+    public void setZombie(boolean zombie) {
+        this.zombie = zombie;
+    }
+
+    public boolean isZombie() {
+        return zombie;
+    }
+    
+    
+
+    public int getFogliUsati() {
+        Set<Integer> fogli = new HashSet<>();
+        for (Integer foglio : fogli) {
+            fogli.add(foglio);
+        }
+        return fogli.size();
+    }
+
     public List<Integer> getSequenzaFogli() {
+        if (this.sequenzaFogli.isEmpty()) {
+            for (int foglio : vettore) {
+                if (sequenzaFogli.isEmpty()) {
+                    sequenzaFogli.add(foglio);
+                } else {
+                    if (!sequenzaFogli.contains(foglio)) {
+                        sequenzaFogli.add(foglio);
+                    }
+                }
+            }
+        }
         return sequenzaFogli;
     }
 
@@ -119,6 +152,9 @@ public class Individual {
 
 //Memorizziamo e otteniamo la fitness di un individuo
     public void setFitness(double fitness) {
+        if(fitness == -1){
+            JOptionPane.showMessageDialog(null, "NOOOO");
+        }
         this.fitness = fitness;
     }
 

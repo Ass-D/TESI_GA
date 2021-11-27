@@ -15,7 +15,7 @@ import org.fusesource.jansi.AnsiConsole;
 
 public class Main {
 
-    public static int maxGenerations = 100; // massimo num. di iterazioni per la terminazione
+    public static int maxGenerations = 1000; // massimo num. di iterazioni per la terminazione
     public static final String version = "1.0";
 //    public static double foglio_W = 203; //larghezza del foglio
 //    public static double alpha = 451.6; //costo spreco
@@ -40,10 +40,10 @@ public class Main {
                 if (command.equals("quit")) {
                     System.out.println(ConsoleColors.ANSI_RED + "Quitting.." + ConsoleColors.ANSI_RESET);
                     System.exit(0);
-                }else if(command.equals("export")){
+                } else if (command.equals("export")) {
                     Exporter.getInstance().openFile();
-                    
-                }else if (command.equals("start")) {
+
+                } else if (command.equals("start")) {
                     System.out.println(ConsoleColors.ANSI_YELLOW + "Inserisci il nome del file contenente i dati (senza estensione)" + ConsoleColors.ANSI_GREEN);
                     String nomeFile = reader.readLine();
                     System.out.println(ConsoleColors.ANSI_YELLOW + "Inizio caricamento file.." + ConsoleColors.ANSI_RESET);
@@ -80,15 +80,21 @@ public class Main {
                             foglio.printOrdini();
                         }
                         System.out.println(ConsoleColors.ANSI_YELLOW + "************************************************************************" + ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_YELLOW + "************************************************************************" + ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_YELLOW + "************************************************************************" + ConsoleColors.ANSI_RESET);
+                        System.out.println(ConsoleColors.ANSI_YELLOW + "************************************************************************" + ConsoleColors.ANSI_RESET);
 
                         for (FoglioType foglio : fogli) {
                             List<Ordine> ordini = foglio.getOrdini();
                             if (ordini.isEmpty()) {
                                 System.out.println(ConsoleColors.ANSI_YELLOW + "----------------------------------------" + ConsoleColors.ANSI_RESET);
-                                System.out.println(ConsoleColors.ANSI_CYAN + "Questo foglio non contiene ordini. SKIP" + ConsoleColors.ANSI_RESET);
+                                System.out.println(ConsoleColors.ANSI_CYAN + "Questo foglio (spessore = " + foglio.getSpessore() + " non contiene ordini. SKIP" + ConsoleColors.ANSI_RESET);
                                 System.out.println(ConsoleColors.ANSI_YELLOW + "----------------------------------------\n" + ConsoleColors.ANSI_RESET);
                                 continue;
                             }
+                            System.out.println(ConsoleColors.ANSI_YELLOW + "----------------------------------------" + ConsoleColors.ANSI_RESET);
+                            System.out.println(ConsoleColors.ANSI_RED + "Questo foglio (spessore = " + foglio.getSpessore() + " contiene "+ foglio.getOrdini().size()+" ordini" + ConsoleColors.ANSI_RESET);
+                            System.out.println(ConsoleColors.ANSI_YELLOW + "----------------------------------------\n" + ConsoleColors.ANSI_RESET);
 
                             double areaFoglio = foglio.getH() * foglio.getW(); //area del foglio
 

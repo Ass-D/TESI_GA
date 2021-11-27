@@ -2,7 +2,10 @@ package it.unina.tesi.bps;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
+import javax.swing.JOptionPane;
 
 /* La popolazione � un insieme di individui e la classe popolazione viene utilizzata per 
 	* operazioni a livello di gruppo da eseguire sugli individui (come la selezione di
@@ -92,6 +95,33 @@ public class Population {
             population[index] = population[i];
             population[i] = a;
         }
+    }
+
+    /**
+     * Calcola il quantitativo minimo di fogli usato dai migliori individui.
+     * Elimina tutti gli individui che usano più fogli del quantitativo minimo.
+     */
+    public void purge() {
+        int minFogli = 100;
+        for (Individual individual : population) {
+            int fogliUsati = individual.getFogliUsati();
+            if( fogliUsati < minFogli){
+                minFogli = fogliUsati;
+            }
+        }
+        List<Individual> survivors = new LinkedList<>();
+        for (Individual individual : population) {
+            if(individual.getFogliUsati() <= minFogli && !individual.isZombie()){
+                survivors.add(individual);
+            }
+        }
+        this.population = survivors.toArray(new Individual[survivors.size()]);
+        
+        if(population.length == 0){
+            JOptionPane.showMessageDialog(null, "ZERO POPULATION");
+        }
+        
+        
     }
 
 }
