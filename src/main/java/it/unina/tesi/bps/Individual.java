@@ -91,6 +91,20 @@ public class Individual {
         return result.stream().mapToInt(i -> i).toArray();
 
     }
+    
+    public List<Ordine> getOrdiniByFoglio(List<Ordine> ordini, int foglio) {
+        List<Ordine> result = new LinkedList<>();
+
+        int i = 0;
+        for (int index : vettore) {
+            if (index == foglio) {
+                result.add(ordini.get(i));
+            }
+            i++;
+        }
+        
+        return result;
+    }
 
     public List<Ordine> getOrdiniByFoglio(Ordine[] ordini, int foglio) {
         List<Ordine> result = new LinkedList<>();
@@ -177,7 +191,7 @@ public class Individual {
         for (int i = 0; i < vettore.length; i++) {
             output += this.vettore[i];
         }
-        return output + "  - fogli: "+getFogliUsati()+"  - "+(this.zombie ? "zombie" : "alive") +" - "+(this.nospace ? "no space" : "space ok");
+        return output + "  - fogli: "+getFogliUsati()+ "  - "+(this.zombie ? "zombie" : "alive") +" - "+(this.nospace ? "no space" : "space ok");
     }
 
 }

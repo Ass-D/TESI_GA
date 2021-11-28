@@ -17,7 +17,8 @@ public class Main {
 
     public static int maxGenerations = 1000; // massimo num. di iterazioni per la terminazione
     public static final String version = "1.0";
-    public static boolean verbose = false;
+    public static boolean verbose = true;
+    public static boolean debug = false;
 //    public static double foglio_W = 203; //larghezza del foglio
 //    public static double alpha = 451.6; //costo spreco
 //    public static double beta = 82.5; //costo penalità
@@ -44,7 +45,23 @@ public class Main {
                 } else if (command.equals("export")) {
                     Exporter.getInstance().openFile();
 
-                } else if (command.equals("start")) {
+                } else if (command.equals("verbose on")) {
+                    verbose = true;
+                    System.out.println(ConsoleColors.ANSI_YELLOW + "verbose [ON] " + ConsoleColors.ANSI_RESET);
+
+                } else if (command.equals("verbose off")) {
+                    verbose = false;
+                    System.out.println(ConsoleColors.ANSI_YELLOW + "verbose [OFF] " + ConsoleColors.ANSI_RESET);
+
+                } else if (command.equals("debug on")) {
+                    debug = true;
+                    System.out.println(ConsoleColors.ANSI_YELLOW + "debug [ON] " + ConsoleColors.ANSI_RESET);
+
+                } else if (command.equals("debug off")) {
+                    debug = false;
+                    System.out.println(ConsoleColors.ANSI_YELLOW + "debug [OFF] " + ConsoleColors.ANSI_RESET);
+
+                }else if (command.equals("start")) {
                     System.out.println(ConsoleColors.ANSI_YELLOW + "Inserisci il nome del file contenente i dati (senza estensione)" + ConsoleColors.ANSI_GREEN);
                     String nomeFile = reader.readLine();
                     System.out.println(ConsoleColors.ANSI_YELLOW + "Inizio caricamento file.." + ConsoleColors.ANSI_RESET);
@@ -68,7 +85,9 @@ public class Main {
                         Exporter.getInstance().export("File caricato con successo.");
 
                         List<FoglioType> fogli = FogliManager.getInstance().getAllFogli();
+                        Exporter.getInstance().export("------------ RIEPILOGO SPESSORI FOGLI -------------");
                         for (FoglioType foglio : fogli) {
+                            Exporter.getInstance().export("Tipologia di foglio - " + foglio + " con " + foglio.getOrdini().size() + " ordini");
                             System.out.println(ConsoleColors.ANSI_YELLOW + "-----------------------------------" + ConsoleColors.ANSI_RESET);
                             System.out.println(ConsoleColors.ANSI_GREEN + " Foglio di Spessore: " + ConsoleColors.PURPLE_BRIGHT + foglio.getSpessore() + ConsoleColors.ANSI_RESET);
                             System.out.println(ConsoleColors.ANSI_GREEN + "      numero Ordini: " + ConsoleColors.PURPLE_BRIGHT + foglio.getOrdini().size() + ConsoleColors.ANSI_RESET);
@@ -80,6 +99,8 @@ public class Main {
                             System.out.println(ConsoleColors.ANSI_YELLOW + "-----------------------------------\n" + ConsoleColors.ANSI_RESET);
                             foglio.printOrdini();
                         }
+                        Exporter.getInstance().export("-----------------------------------------");
+
                         System.out.println(ConsoleColors.ANSI_YELLOW + "************************************************************************" + ConsoleColors.ANSI_RESET);
                         System.out.println(ConsoleColors.ANSI_YELLOW + "************************************************************************" + ConsoleColors.ANSI_RESET);
                         System.out.println(ConsoleColors.ANSI_YELLOW + "************************************************************************" + ConsoleColors.ANSI_RESET);
@@ -94,7 +115,7 @@ public class Main {
                                 continue;
                             }
                             System.out.println(ConsoleColors.ANSI_YELLOW + "----------------------------------------" + ConsoleColors.ANSI_RESET);
-                            System.out.println(ConsoleColors.ANSI_RED + "Questo foglio (spessore = " + foglio.getSpessore() + " contiene "+ foglio.getOrdini().size()+" ordini" + ConsoleColors.ANSI_RESET);
+                            System.out.println(ConsoleColors.ANSI_RED + "Questo foglio (spessore = " + foglio.getSpessore() + " contiene " + foglio.getOrdini().size() + " ordini" + ConsoleColors.ANSI_RESET);
                             System.out.println(ConsoleColors.ANSI_YELLOW + "----------------------------------------\n" + ConsoleColors.ANSI_RESET);
 
                             double areaFoglio = foglio.getH() * foglio.getW(); //area del foglio
@@ -114,7 +135,7 @@ public class Main {
 
 //Stampiamo l'individuo più in forma 
                                 Individual fittest = population.getFittest(0);
-                                if(fittest == null){
+                                if (fittest == null) {
 //                                    System.out.println("ehm..");
                                     continue;
                                 }
@@ -141,15 +162,47 @@ public class Main {
                             Individual fittest = population.getFittest(0);
                             System.out.println("La soluzione migliore è: " + fittest);
                             System.out.println("====================================================");
-                            Exporter.getInstance().export("Foglio di spessore: " + foglio.getSpessore()+" con "+foglio.getOrdini().size()+ " ordini");
+
+                            Exporter.getInstance().export("\n\n================ S O L U Z I O N E =================");
+                            Exporter.getInstance().export("Del tipo di foglio - " + foglio + " con " + foglio.getOrdini().size() + " ordini");
                             Exporter.getInstance().export("La soluzione migliore è: " + fittest);
                             Exporter.getInstance().export("====================================================");
-                            System.out.println("Le altre soluzioni: ");
-                            int i = 0;
-                            for (Individual individual : population.getIndividuals()) {
-                                System.out.println("Soluzione alternativa " + i + ") " + individual);
-                                i++;
+                            Exporter.getInstance().export("==================  O R D I N I  ===================");
+                            List<Integer> sequenzaFogli = fittest.getSequenzaFogli();
+                            for (Integer sequenza : sequenzaFogli) {
+                                List<Ordine> ordiniByFoglio = fittest.getOrdiniByFoglio(foglio.getOrdini(), sequenza);
+                                Exporter.getInstance().export("Foglio " + sequenza + ":");
+                                for (Ordine ordine : ordiniByFoglio) {
+                                    Exporter.getInstance().export("\tOrdine: " + ordine);
+                                }
+                                Exporter.getInstance().export("-------------------------------------------------------");
                             }
+
+                            if (verbose) {
+                                Exporter.getInstance().export("\n-------      SOLUZIONI ALTERNATIVE      --------------");
+                            }
+                            System.out.println("Le altre soluzioni: ");
+                            int i = 1;
+                            for (Individual individual : population.getIndividuals()) {
+                                System.out.println(i + ") " + individual);
+                                if (verbose) {
+                                    Exporter.getInstance().export(i + ") " + individual);
+                                    List<Integer> sequenzaAlternativa = individual.getSequenzaFogli();
+                                    for (Integer sequenza : sequenzaAlternativa) {
+                                        List<Ordine> ordiniByFoglio = individual.getOrdiniByFoglio(foglio.getOrdini(), sequenza);
+                                        Exporter.getInstance().export("Foglio " + sequenza + ":");
+                                        for (Ordine ordine : ordiniByFoglio) {
+                                            Exporter.getInstance().export("\tOrdine: " + ordine);
+                                        }
+                                        Exporter.getInstance().export("-------------------------------------------------------");
+                                    }
+
+                                    i++;
+                                    Exporter.getInstance().export("******************************************************\n");
+                                }
+                            }
+
+                            Exporter.getInstance().export("\n====================================================");
 
                             ////ASSUNTA: MOSTRARE come output anche lo spreco dei fogli 1 e 2 della soluzione migliore    
                             //    System.out.println("spreco foglio 1:" +sprecoFoglio1 );

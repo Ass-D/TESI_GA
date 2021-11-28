@@ -445,14 +445,15 @@ public class GeneticAlgorithm {
 //            double c1 = tempoElaborazioneFoglio1; asdoòhashd
 //        }
         // TEMPI DI COMPLETAMENTO DEI FOGLI
-        double tempoCompletamentoF1 = tempoElaborazioneFoglio1;
-        double tempoCompletamentoF2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
-        double tempoCompletamentoF3 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3;
-        double tempoCompletamentoF4 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3 + tempoElaborazioneFoglio4;
+        
+//        double tempoCompletamentoF1 = tempoElaborazioneFoglio1;
+//        double tempoCompletamentoF2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
+//        double tempoCompletamentoF3 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3;
+//        double tempoCompletamentoF4 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3 + tempoElaborazioneFoglio4;
 
 // ASSUNTA - IL CONCETTO DELLA MAPPA METTO A COMMENTO PERCHè DEVO VALUTARE QUALE CONCETTO MI AIUTA DI PIù. 
 // SE DECIDERE IO LA SEQUENZA SEMPRE di 1-2-3-4 COME FATTO ALL'INIZIO O FARLA VALUTARE ALL' ALGORITMO
-        /*     Map<Integer, Double> tempiElabMap = individual.getTempiDiElaborazione(ordini);
+             Map<Integer, Double> tempiElabMap = fittest.getTempiDiElaborazione(ordini);
 
         //TODO RENDERE GENERICA QUESTA PARTE 
         double ritardoFoglio1 = 0;
@@ -471,12 +472,12 @@ public class GeneticAlgorithm {
         if (tempiElabMap.containsKey(4)) {
             ritardoFoglio4 = tempiElabMap.get(4) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(4) - minDueDateFoglio1 : 0;
         }
-         */
+         
         // RITARDO FOGLI
-        double ritardoFoglio1 = tempoCompletamentoF1 - minDueDateFoglio1 >= 0 ? tempoCompletamentoF1 - minDueDateFoglio1 : 0;
-        double ritardoFoglio2 = tempoCompletamentoF2 - minDueDateFoglio2 >= 0 ? tempoCompletamentoF2 - minDueDateFoglio2 : 0;
-        double ritardoFoglio3 = tempoCompletamentoF3 - minDueDateFoglio3 >= 0 ? tempoCompletamentoF3 - minDueDateFoglio3 : 0;
-        double ritardoFoglio4 = tempoCompletamentoF4 - minDueDateFoglio4 >= 0 ? tempoCompletamentoF4 - minDueDateFoglio4 : 0;
+//        ritardoFoglio1 = tempoCompletamentoF1 - minDueDateFoglio1 >= 0 ? tempoCompletamentoF1 - minDueDateFoglio1 : 0;
+//        ritardoFoglio2 = tempoCompletamentoF2 - minDueDateFoglio2 >= 0 ? tempoCompletamentoF2 - minDueDateFoglio2 : 0;
+//        ritardoFoglio3 = tempoCompletamentoF3 - minDueDateFoglio3 >= 0 ? tempoCompletamentoF3 - minDueDateFoglio3 : 0;
+//        ritardoFoglio4 = tempoCompletamentoF4 - minDueDateFoglio4 >= 0 ? tempoCompletamentoF4 - minDueDateFoglio4 : 0;
 
         double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini);
         double sommatoriaIndicePriority2 = numFogli < 2 ? 0 : getSommaIndicePriorita(foglio2, ordini);

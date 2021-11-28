@@ -71,4 +71,11 @@ public class FoglioType {
         System.out.println(ConsoleColors.ANSI_YELLOW+" ================================================ "+ConsoleColors.ANSI_RESET);
     }
 
+    @Override
+    public String toString() {
+        return "spessore: "+spessore;
+    }
+    
+    
+
 }

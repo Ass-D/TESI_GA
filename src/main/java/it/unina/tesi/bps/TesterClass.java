@@ -28,7 +28,7 @@ public class TesterClass {
             } else {
                 if (!sequenzaFogli.contains(foglio)) {
                     sequenzaFogli.add(foglio);
-                }
+    }
             }
         }
         for (Integer integer : sequenzaFogli) {
