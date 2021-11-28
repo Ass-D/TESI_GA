@@ -106,7 +106,7 @@ public class GeneticAlgorithm {
 //            System.out.println("areaFoglio  =  "+areaFoglio);
 //            System.out.println("============================================");
 //            JOptionPane.showMessageDialog(null, "NOOOO");
-            individual.setZombie(true);
+            individual.setNospace(true);
             throw new SoluzioneImpossibileException("La somma delle aree degli ordini non può eccedere l'area del foglio");
         } else {
 //            System.out.println("********** VINCOLI OK ****************");

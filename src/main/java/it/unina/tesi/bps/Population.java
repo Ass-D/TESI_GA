@@ -42,31 +42,30 @@ public class Population {
         return this.population;
     }
 
-    private void eliminateNulls(){
+    private void eliminateNulls() {
         List<Individual> list = new LinkedList<>();
         for (Individual individual : this.population) {
-            if(individual != null){
+            if (individual != null) {
                 list.add(individual);
             }
         }
         this.population = list.toArray(new Individual[list.size()]);
     }
-    
-    
+
     /*Cerchiamo un individuo nella popolazione attraverso la sua fitness, ordinando la popolazione 
 	*  attraverso la fitness e facciamoci restituire l'individuo pi� adatto (fittest)
      */
     public Individual getFittest(int offset) {
-        
+
         eliminateNulls();
 
-        if(this.population.length == 0){
+        if (this.population.length == 0) {
             return null;
         }
         Arrays.sort(this.population, new Comparator<Individual>() {
             @Override
             public int compare(Individual o1, Individual o2) {
-                
+
                 if (o1.getFitness() > o2.getFitness()) {
                     return -1;
                 } else if (o1.getFitness() < o2.getFitness()) {
@@ -119,26 +118,73 @@ public class Population {
      * Elimina tutti gli individui che usano più fogli del quantitativo minimo.
      */
     public void purge() {
-        int minFogli = 100;
+        int minFogli = 1000;
+        int cromoLenght = population[0].getVettoreLength();
+        int originalSize = population.length;
         for (Individual individual : population) {
+            if (individual.isNospace()) {
+                continue;
+            }
             int fogliUsati = individual.getFogliUsati();
-            if( fogliUsati < minFogli){
+            if (fogliUsati < minFogli) {
                 minFogli = fogliUsati;
             }
         }
+        System.out.println("BEFORE PURGE, min = " + minFogli);
+        for (Individual individual : population) {
+            if (individual.getFogliUsati() > minFogli) {
+                individual.setZombie(true);
+            }
+            System.out.println(individual);
+        }
         List<Individual> survivors = new LinkedList<>();
         for (Individual individual : population) {
-            if(individual.getFogliUsati() <= minFogli && !individual.isZombie()){
+            if (!individual.isZombie() && !individual.isNospace()) {
                 survivors.add(individual);
             }
         }
+
+        System.out.println("SURVIROS SIZE: " + survivors.size());
+//        this.population = new Individual[survivors.size()];
+        //this.population = survivors.toArray(new Individual[survivors.size()]);
+        System.out.println("AFTER PURGE");
+        for (Individual individual : survivors) {
+            System.out.println(individual);
+        }
+        System.out.println("REFILLING..");
+        int rip = originalSize - survivors.size();
+        //cloning the winners
+
+        int n_clones = (int)(rip / 1.5);
+        System.out.println("Cloning "+n_clones+" individui");
+        List<Individual> clones = new LinkedList<>();
+        for (int i = 0; i < n_clones; i++) {
+            int random = survivors.size() == 1 ? 0 : nexRandomInRange(0, survivors.size()-1);
+            clones.add(new Individual(survivors.get(random).getvettore()));
+        }
+        survivors.addAll(clones);
+        //end cloning the winners
+        System.out.println("Creating " + (rip - n_clones) + " new Individual !");
+        for (int i = 0; i < rip - n_clones; i++) {
+            survivors.add(new Individual(cromoLenght));
+        }
+
         this.population = survivors.toArray(new Individual[survivors.size()]);
         
+        System.out.println("AFTER GIGA CLONING");
+        for (Individual individual : survivors) {
+            System.out.println(individual);
+        }
+        System.out.println("---------------------------------------------------");
+
 //        if(population.length == 0){
 //            JOptionPane.showMessageDialog(null, "ZERO POPULATION");
 //        }
-        
-        
+    }
+
+    public int nexRandomInRange(int min, int max) {
+        Random random = new Random();
+        return random.nextInt(max - min) + min;
     }
 
 }

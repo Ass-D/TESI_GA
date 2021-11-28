@@ -20,6 +20,7 @@ public class Individual {
     private double fitness = -5;
     private List<Integer> sequenzaFogli = new LinkedList<>();
     private boolean zombie = false;
+    private boolean nospace = false;
 
     public Individual(int[] vettore) {
 
@@ -43,12 +44,19 @@ public class Individual {
     public boolean isZombie() {
         return zombie;
     }
-    
+
+    public boolean isNospace() {
+        return nospace;
+    }
+
+    public void setNospace(boolean nospace) {
+        this.nospace = nospace;
+    }
     
 
     public int getFogliUsati() {
         Set<Integer> fogli = new HashSet<>();
-        for (Integer foglio : fogli) {
+        for (Integer foglio : vettore) {
             fogli.add(foglio);
         }
         return fogli.size();
@@ -169,7 +177,7 @@ public class Individual {
         for (int i = 0; i < vettore.length; i++) {
             output += this.vettore[i];
         }
-        return output;
+        return output + "  - fogli: "+getFogliUsati()+"  - "+(this.zombie ? "zombie" : "alive") +" - "+(this.nospace ? "no space" : "space ok");
     }
 
 }
