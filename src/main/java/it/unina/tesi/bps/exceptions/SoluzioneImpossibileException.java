@@ -4,16 +4,10 @@
  */
 package it.unina.tesi.bps.exceptions;
 
-/**
- *
- * @author sommovir
- */
 public class SoluzioneImpossibileException extends Exception {
 
     public SoluzioneImpossibileException(String detail) {
         super("Soluzione inammissibile: "+detail);
     }
-    
-    
     
 }

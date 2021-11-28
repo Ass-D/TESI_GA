@@ -10,14 +10,9 @@ import java.util.List;
 import java.util.Map;
 import static java.util.stream.Collectors.toList;
 
-/**
- *
- * @author sommovir
- */
 public class FogliManager {
     
     private static FogliManager _instance = null;
-//    private Map<Double,List<Ordine>> ordiniPerSpessoreMap = new HashMap<>();
     private Map<Double, FoglioType> fogliPerSpessoreMap = new HashMap<>();
     
     public static FogliManager getInstance() {

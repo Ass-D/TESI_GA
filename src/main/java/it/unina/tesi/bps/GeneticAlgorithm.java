@@ -1,6 +1,7 @@
 package it.unina.tesi.bps;
 
 import it.unina.tesi.bps.exceptions.SoluzioneImpossibileException;
+import it.unina.tesi.bps.utils.Exporter;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -53,19 +54,19 @@ public class GeneticAlgorithm {
         }
         return min;
     }
-
+ //Calcoliamo per ciascun ordine il tempo di lavorazione di retinatura necessario
     private double getSommaTempoRetinatura(int[] indexes, Ordine[] ordini) {
         double somma = 0;
         for (int index : indexes) {
-            somma += ordini[index].tempoElaborazioneRetinatura();
+            somma += ordini[index].tempoLavorazioneRetinatura();
         }
         return somma;
     }
-
+ // Calcoliamo per ciascun ordine l'indice di priorità
     private double getSommaIndicePriorita(int[] indexes, Ordine[] ordini) {
         double somma = 0;
         for (int index : indexes) {
-            somma += ordini[index].indiceDiPriotita();
+            somma += ordini[index].indiceDiPriorita();
         }
         return somma;
     }
@@ -74,7 +75,7 @@ public class GeneticAlgorithm {
     public double calcFitness(Individual individual, double areaFoglio, double alpha, double beta, List<Ordine> ordini) throws SoluzioneImpossibileException {
 
         //  int[] vettore = individual.getvettore();
-        //int[] nessunFoglio = individual.getOrdiniByIndex(0);
+        
         int[] foglio1 = null;
         int[] foglio2 = null;
         int[] foglio3 = null;
@@ -99,19 +100,13 @@ public class GeneticAlgorithm {
         double areaOrdiniFoglio4 = numFogli < 4 ? 0 : calculateAreaOrdiniByIndex(foglio4, ordini.toArray(new Ordine[ordini.size()]));
 
         if (areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio || areaOrdiniFoglio3 > areaFoglio || areaOrdiniFoglio4 > areaFoglio) {
-//            System.out.println("areaOrdiniFoglio1  =  "+areaOrdiniFoglio1);
-//            System.out.println("areaFoglio  =  "+areaFoglio);
-//            System.out.println("============================================");
-//            System.out.println("areaOrdiniFoglio2  =  "+areaOrdiniFoglio2);
-//            System.out.println("areaFoglio  =  "+areaFoglio);
-//            System.out.println("============================================");
-//            JOptionPane.showMessageDialog(null, "NOOOO");
+            
             individual.setNospace(true);
             throw new SoluzioneImpossibileException("La somma delle aree degli ordini non può eccedere l'area del foglio");
         } else {
-//            System.out.println("********** VINCOLI OK ****************");
-        }
 
+        }
+    // Calcoliamo per ciascun foglio l'indice di spreco
         double sprecoFoglio1 = (areaFoglio - areaOrdiniFoglio1) / areaFoglio;
         double sprecoFoglio2 = (areaFoglio - areaOrdiniFoglio2) / areaFoglio;
         double sprecoFoglio3 = (areaFoglio - areaOrdiniFoglio3) / areaFoglio;
@@ -127,69 +122,43 @@ public class GeneticAlgorithm {
             sprecoFoglio4 = 0;
         }
 
-////ASSUNTA:  VORREI INSERIRE ANCHE QUESTO VINCOLO come quello sopra
-//        if (sprecoFoglio1 >= 0.25 || sprecoFoglio2 >= 0.25 || sprecoFoglio3 >= 0.25) {
-////            JOptionPane.showMessageDialog(null, "DUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-//            individual.setZombie(true);
-//
-//            throw new SoluzioneImpossibileException("L indice di utilizzo del foglio è troppo basso");
-//        }
-
+    // Calcoliamo il costo di spreco complessivo
         double costoSpreco = alpha * (sprecoFoglio1 + sprecoFoglio2 + sprecoFoglio3 + sprecoFoglio4);
-
+    
+    // Calcoliamo la data di scadenza di ciascun foglio
+    
         double minDueDateFoglio1 = calculateMinExpirationDate(foglio1, ordini.toArray(new Ordine[ordini.size()]));
         double minDueDateFoglio2 = numFogli < 2 ? 0 : calculateMinExpirationDate(foglio2, ordini.toArray(new Ordine[ordini.size()]));
         double minDueDateFoglio3 = numFogli < 3 ? 0 : calculateMinExpirationDate(foglio3, ordini.toArray(new Ordine[ordini.size()]));
         double minDueDateFoglio4 = numFogli < 4 ? 0 : calculateMinExpirationDate(foglio4, ordini.toArray(new Ordine[ordini.size()]));
+    
+// Calcoliamo il tempo di processamento di ciascun foglio
+        double tempoProcessamentoFoglio1 = getSommaTempoRetinatura(foglio1, ordini.toArray(new Ordine[ordini.size()]));
+        double tempoProcessamentoFoglio2 = numFogli < 2 ? 0 : getSommaTempoRetinatura(foglio2, ordini.toArray(new Ordine[ordini.size()]));
+        double tempoProcessamentoFoglio3 = numFogli < 3 ? 0 : getSommaTempoRetinatura(foglio3, ordini.toArray(new Ordine[ordini.size()]));
+        double tempoProcessamentoFoglio4 = numFogli < 4 ? 0 : getSommaTempoRetinatura(foglio4, ordini.toArray(new Ordine[ordini.size()]));
 
-        double tempoElaborazioneFoglio1 = getSommaTempoRetinatura(foglio1, ordini.toArray(new Ordine[ordini.size()]));
-        double tempoElaborazioneFoglio2 = numFogli < 2 ? 0 : getSommaTempoRetinatura(foglio2, ordini.toArray(new Ordine[ordini.size()]));
-        double tempoElaborazioneFoglio3 = numFogli < 3 ? 0 : getSommaTempoRetinatura(foglio3, ordini.toArray(new Ordine[ordini.size()]));
-        double tempoElaborazioneFoglio4 = numFogli < 4 ? 0 : getSommaTempoRetinatura(foglio4, ordini.toArray(new Ordine[ordini.size()]));
+   
+ // Calcoliamo il tempo di completamento di ciascun foglio
+        
+       double tempoCompletamentoF1 = tempoProcessamentoFoglio1;
+       double tempoCompletamentoF2 = tempoProcessamentoFoglio1 + tempoProcessamentoFoglio2;
+       double tempoCompletamentoF3 = tempoProcessamentoFoglio1 + tempoProcessamentoFoglio2 + tempoProcessamentoFoglio3;
+       double tempoCompletamentoF4 = tempoProcessamentoFoglio1 + tempoProcessamentoFoglio2 + tempoProcessamentoFoglio3 + tempoProcessamentoFoglio4;
 
-        //qva
-//        if(individual.getvettore()[0] == 1){
-//            double c1 = tempoElaborazioneFoglio1; asdoòhashd
-//        }
-        // TEMPI DI COMPLETAMENTO DEI FOGLI
-        double tempoCompletamentoF1 = tempoElaborazioneFoglio1;
-        double tempoCompletamentoF2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
-        double tempoCompletamentoF3 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3;
-        double tempoCompletamentoF4 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3 + tempoElaborazioneFoglio4;
-
-// ASSUNTA - IL CONCETTO DELLA MAPPA METTO A COMMENTO PERCHè DEVO VALUTARE QUALE CONCETTO MI AIUTA DI PIù. 
-// SE DECIDERE IO LA SEQUENZA SEMPRE di 1-2-3-4 COME FATTO ALL'INIZIO O FARLA VALUTARE ALL' ALGORITMO
-        /*     Map<Integer, Double> tempiElabMap = individual.getTempiDiElaborazione(ordini);
-
-        //TODO RENDERE GENERICA QUESTA PARTE 
-        double ritardoFoglio1 = 0;
-        double ritardoFoglio2 = 0;
-        double ritardoFoglio3 = 0;
-        double ritardoFoglio4 = 0;
-        if (tempiElabMap.containsKey(1)) {
-            ritardoFoglio1 = tempiElabMap.get(1) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(1) - minDueDateFoglio1 : 0;
-        }
-        if (tempiElabMap.containsKey(2)) {
-            ritardoFoglio2 = tempiElabMap.get(2) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(2) - minDueDateFoglio1 : 0;
-        }
-        if (tempiElabMap.containsKey(3)) {
-            ritardoFoglio3 = tempiElabMap.get(3) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(3) - minDueDateFoglio1 : 0;
-        }
-        if (tempiElabMap.containsKey(4)) {
-            ritardoFoglio4 = tempiElabMap.get(4) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(4) - minDueDateFoglio1 : 0;
-        }
-         */
-        // RITARDO FOGLI
+        // Calcoliamo il ritardo dei fogli
         double ritardoFoglio1 = tempoCompletamentoF1 - minDueDateFoglio1 >= 0 ? tempoCompletamentoF1 - minDueDateFoglio1 : 0;
         double ritardoFoglio2 = tempoCompletamentoF2 - minDueDateFoglio2 >= 0 ? tempoCompletamentoF2 - minDueDateFoglio2 : 0;
         double ritardoFoglio3 = tempoCompletamentoF3 - minDueDateFoglio3 >= 0 ? tempoCompletamentoF3 - minDueDateFoglio3 : 0;
         double ritardoFoglio4 = tempoCompletamentoF4 - minDueDateFoglio4 >= 0 ? tempoCompletamentoF4 - minDueDateFoglio4 : 0;
-
+  
+        // Calcoliamo l'indice di priorità di ciscun foglio
         double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini.toArray(new Ordine[ordini.size()]));
         double sommatoriaIndicePriority2 = numFogli < 2 ? 0 : getSommaIndicePriorita(foglio2, ordini.toArray(new Ordine[ordini.size()]));
         double sommatoriaIndicePriority3 = numFogli < 3 ? 0 : getSommaIndicePriorita(foglio3, ordini.toArray(new Ordine[ordini.size()]));
         double sommatoriaIndicePriority4 = numFogli < 4 ? 0 : getSommaIndicePriorita(foglio4, ordini.toArray(new Ordine[ordini.size()]));
-
+        
+        // Calcoliamo il costo di penalità complessivo
         double costoPenalty = beta * (ritardoFoglio1 * sommatoriaIndicePriority1
                 + ritardoFoglio2 * sommatoriaIndicePriority2
                 + ritardoFoglio3 * sommatoriaIndicePriority3
@@ -206,30 +175,10 @@ public class GeneticAlgorithm {
         individual.setFitness(fitness);
         return fitness;
 
-        //<editor-fold defaultstate="collapsed" desc=" Codice della tua amica ">    
-//
-//        double tcagv2 = max3 + max4 + tr; //tempo di completamento AGV2
-//
-////Calcoliamo la fitness
-//        double fitness = 0;
-//        if (tcagv1 > tcagv2) {
-//            fitness = tcagv1;
-//        } else {
-//            fitness = tcagv2;
-//        }
-//
-////Invertiamo la fitness (in modo da averla decrescente)
-//        fitness = 1 / fitness;
-//
-////Memorizziamo la fitness
-//        individual.setFitness(fitness);
-//
-//        return fitness;
-//</editor-fold>
     }
 
     /*Valutiamo la popolazione attraverso un loop che calcola la fitness per ogni individuo
-* e dopo calcola la fitness dell'intera popolazione
+     e dopo calcola la fitness dell'intera popolazione
      */
     public void evalPopulation(Population population, double areaFoglio, double alpha, double beta, List<Ordine> ordini) {
 
@@ -243,8 +192,6 @@ public class GeneticAlgorithm {
 //                System.out.println("INDIVIDUAL FITNESS AFTER = "+individual.getFitness());
                 populationFitness += fitness;
             } catch (SoluzioneImpossibileException ex) {
-//                System.out.println("Vincolo non rispettato");
-
             }
         }
         population.setPopulationFitness(populationFitness);
@@ -260,7 +207,7 @@ public class GeneticAlgorithm {
 * Ogni individuo viene considerato per il crossover e confrontando il tasso di crossover con 
 * un numero casuale decidiamo se all'individuo va applicato il crossover. 
 * Dopo aver selezionato un primo individuo bisogna trovarne un secondo, per la selezione utilizziamo
-* la ruota della roulette.
+* il metodo della ruota della roulette.
      */
     public Individual selectParent(Population population) {
 
@@ -285,7 +232,7 @@ public class GeneticAlgorithm {
     public Population crossoverPopulation(Population population) {
 
 //Creiamo una nuova popolazione 
-        population.purge();
+        population.select();
         Population newPopulation = new Population(population.size());
 
 //Facciamo un loop per capire se applicare il crossover all'individuo 1
@@ -296,13 +243,13 @@ public class GeneticAlgorithm {
 
                 Individual offspring = new Individual(parent1.getVettoreLength());
 
-//Cerchiamo il secondo genitore
+//Cerchiamo il genitore 2
                 Individual parent2 = selectParent(population);
 
 //Facciamo un loop sul genoma
                 for (int iIndex = 0; iIndex < parent1.getVettoreLength(); iIndex++) {
 
-//Usiamo met� dei geni del genitore 1 e metà di quelli del genitore 2 
+//Usiamo metà dei geni del genitore 1 e metà di quelli del genitore 2 
                     if (0.5 > Math.random()) {
                         offspring.setI(iIndex, parent1.getI(iIndex));
                     } else {
@@ -331,7 +278,7 @@ public class GeneticAlgorithm {
 //Creiamo una nuova popolazione che contenga gli individui mutati
         Population newPopulation = new Population(this.populationSize);
 
-//Facciamo un loop a partire dalle persone pi� in forma
+//Facciamo un loop a partire dalle persone più in forma
         for (int populationIndex = 0; populationIndex < population.size(); populationIndex++) {
             Individual individual = population.getFittest(populationIndex);
 
@@ -367,7 +314,7 @@ public class GeneticAlgorithm {
         Individual fittest = population.getFittest(0);
 
             //  int[] vettore = individual.getvettore();
-        //int[] nessunFoglio = individual.getOrdiniByIndex(0);
+      
         int[] foglio1 = null;
         int[] foglio2 = null;
         int[] foglio3 = null;
@@ -392,17 +339,11 @@ public class GeneticAlgorithm {
         double areaOrdiniFoglio4 = numFogli < 4 ? 0 : calculateAreaOrdiniByIndex(foglio4, ordini);
 
         if (areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio || areaOrdiniFoglio3 > areaFoglio || areaOrdiniFoglio4 > areaFoglio) {
-//            System.out.println("areaOrdiniFoglio1  =  "+areaOrdiniFoglio1);
-//            System.out.println("areaFoglio  =  "+areaFoglio);
-//            System.out.println("============================================");
-//            System.out.println("areaOrdiniFoglio2  =  "+areaOrdiniFoglio2);
-//            System.out.println("areaFoglio  =  "+areaFoglio);
-//            System.out.println("============================================");
-//            JOptionPane.showMessageDialog(null, "NOOOO");
+
             fittest.setNospace(true);
             throw new SoluzioneImpossibileException("La somma delle aree degli ordini non può eccedere l'area del foglio");
         } else {
-//            System.out.println("********** VINCOLI OK ****************");
+
         }
 
         double sprecoFoglio1 = (areaFoglio - areaOrdiniFoglio1) / areaFoglio;
@@ -420,14 +361,6 @@ public class GeneticAlgorithm {
             sprecoFoglio4 = 0;
         }
 
-////ASSUNTA:  VORREI INSERIRE ANCHE QUESTO VINCOLO come quello sopra
-//        if (sprecoFoglio1 >= 0.25 || sprecoFoglio2 >= 0.25 || sprecoFoglio3 >= 0.25) {
-////            JOptionPane.showMessageDialog(null, "DUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-//            individual.setZombie(true);
-//
-//            throw new SoluzioneImpossibileException("L indice di utilizzo del foglio è troppo basso");
-//        }
-
         double costoSpreco = alpha * (sprecoFoglio1 + sprecoFoglio2 + sprecoFoglio3 + sprecoFoglio4);
 
         double minDueDateFoglio1 = calculateMinExpirationDate(foglio1,ordini);
@@ -435,50 +368,31 @@ public class GeneticAlgorithm {
         double minDueDateFoglio3 = numFogli < 3 ? 0 : calculateMinExpirationDate(foglio3, ordini);
         double minDueDateFoglio4 = numFogli < 4 ? 0 : calculateMinExpirationDate(foglio4, ordini);
 
-        double tempoElaborazioneFoglio1 = getSommaTempoRetinatura(foglio1, ordini);
-        double tempoElaborazioneFoglio2 = numFogli < 2 ? 0 : getSommaTempoRetinatura(foglio2, ordini);
-        double tempoElaborazioneFoglio3 = numFogli < 3 ? 0 : getSommaTempoRetinatura(foglio3, ordini);
-        double tempoElaborazioneFoglio4 = numFogli < 4 ? 0 : getSommaTempoRetinatura(foglio4, ordini);
+        double tempoProcessamentoFoglio1 = getSommaTempoRetinatura(foglio1, ordini);
+        double tempoProcessamentoFoglio2 = numFogli < 2 ? 0 : getSommaTempoRetinatura(foglio2, ordini);
+        double tempoProcessamentoFoglio3 = numFogli < 3 ? 0 : getSommaTempoRetinatura(foglio3, ordini);
+        double tempoProcessamentoFoglio4 = numFogli < 4 ? 0 : getSommaTempoRetinatura(foglio4, ordini);
 
-        //qva
-//        if(individual.getvettore()[0] == 1){
-//            double c1 = tempoElaborazioneFoglio1; asdoòhashd
-//        }
-        // TEMPI DI COMPLETAMENTO DEI FOGLI
-        
-//        double tempoCompletamentoF1 = tempoElaborazioneFoglio1;
-//        double tempoCompletamentoF2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
-//        double tempoCompletamentoF3 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3;
-//        double tempoCompletamentoF4 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3 + tempoElaborazioneFoglio4;
 
-// ASSUNTA - IL CONCETTO DELLA MAPPA METTO A COMMENTO PERCHè DEVO VALUTARE QUALE CONCETTO MI AIUTA DI PIù. 
-// SE DECIDERE IO LA SEQUENZA SEMPRE di 1-2-3-4 COME FATTO ALL'INIZIO O FARLA VALUTARE ALL' ALGORITMO
-             Map<Integer, Double> tempiElabMap = fittest.getTempiDiElaborazione(ordini);
+             Map<Integer, Double> tempiProcessMap = fittest.getTempiDiProcessamento(ordini);
 
-        //TODO RENDERE GENERICA QUESTA PARTE 
         double ritardoFoglio1 = 0;
         double ritardoFoglio2 = 0;
         double ritardoFoglio3 = 0;
         double ritardoFoglio4 = 0;
-        if (tempiElabMap.containsKey(1)) {
-            ritardoFoglio1 = tempiElabMap.get(1) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(1) - minDueDateFoglio1 : 0;
+        if (tempiProcessMap.containsKey(1)) {
+            ritardoFoglio1 = tempiProcessMap.get(1) - minDueDateFoglio1 >= 0 ? tempiProcessMap.get(1) - minDueDateFoglio1 : 0;
         }
-        if (tempiElabMap.containsKey(2)) {
-            ritardoFoglio2 = tempiElabMap.get(2) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(2) - minDueDateFoglio1 : 0;
+        if (tempiProcessMap.containsKey(2)) {
+            ritardoFoglio2 = tempiProcessMap.get(2) - minDueDateFoglio1 >= 0 ? tempiProcessMap.get(2) - minDueDateFoglio1 : 0;
         }
-        if (tempiElabMap.containsKey(3)) {
-            ritardoFoglio3 = tempiElabMap.get(3) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(3) - minDueDateFoglio1 : 0;
+        if (tempiProcessMap.containsKey(3)) {
+            ritardoFoglio3 = tempiProcessMap.get(3) - minDueDateFoglio1 >= 0 ? tempiProcessMap.get(3) - minDueDateFoglio1 : 0;
         }
-        if (tempiElabMap.containsKey(4)) {
-            ritardoFoglio4 = tempiElabMap.get(4) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(4) - minDueDateFoglio1 : 0;
+        if (tempiProcessMap.containsKey(4)) {
+            ritardoFoglio4 = tempiProcessMap.get(4) - minDueDateFoglio1 >= 0 ? tempiProcessMap.get(4) - minDueDateFoglio1 : 0;
         }
-         
-        // RITARDO FOGLI
-//        ritardoFoglio1 = tempoCompletamentoF1 - minDueDateFoglio1 >= 0 ? tempoCompletamentoF1 - minDueDateFoglio1 : 0;
-//        ritardoFoglio2 = tempoCompletamentoF2 - minDueDateFoglio2 >= 0 ? tempoCompletamentoF2 - minDueDateFoglio2 : 0;
-//        ritardoFoglio3 = tempoCompletamentoF3 - minDueDateFoglio3 >= 0 ? tempoCompletamentoF3 - minDueDateFoglio3 : 0;
-//        ritardoFoglio4 = tempoCompletamentoF4 - minDueDateFoglio4 >= 0 ? tempoCompletamentoF4 - minDueDateFoglio4 : 0;
-
+      
         double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini);
         double sommatoriaIndicePriority2 = numFogli < 2 ? 0 : getSommaIndicePriorita(foglio2, ordini);
         double sommatoriaIndicePriority3 = numFogli < 3 ? 0 : getSommaIndicePriorita(foglio3, ordini);
@@ -488,6 +402,7 @@ public class GeneticAlgorithm {
                 + ritardoFoglio2 * sommatoriaIndicePriority2
                 + ritardoFoglio3 * sommatoriaIndicePriority3
                 + ritardoFoglio4 * sommatoriaIndicePriority4);
+
 
 ////Calcoliamo la fitness
         double fitness = costoSpreco + costoPenalty;

@@ -17,9 +17,9 @@ import javax.swing.JOptionPane;
 public class Individual {
 
     private int[] vettore;
-    private double fitness = -5;
+    private double fitness = -1;
     private List<Integer> sequenzaFogli = new LinkedList<>();
-    private boolean zombie = false;
+    private boolean SprecoNonAccettabile = false;
     private boolean nospace = false;
 
     public Individual(int[] vettore) {
@@ -37,12 +37,12 @@ public class Individual {
         }
     }
 
-    public void setZombie(boolean zombie) {
-        this.zombie = zombie;
+    public void setSprecoNonAccettabile(boolean SprecoNonAccettabile) {
+        this.SprecoNonAccettabile = SprecoNonAccettabile;
     }
 
-    public boolean isZombie() {
-        return zombie;
+    public boolean isSprecoNonAccettabile() {
+        return SprecoNonAccettabile;
     }
 
     public boolean isNospace() {
@@ -120,29 +120,29 @@ public class Individual {
         return result;
     }
 
-    private double sumTempiElaborazione(List<Ordine> ordini) {
+    private double sumTempiLavorazione(List<Ordine> ordini) {
         double d = 0;
         for (Ordine ordine : ordini) {
-            d += ordine.tempoElaborazioneRetinatura();
+            d += ordine.tempoLavorazioneRetinatura();
         }
         return d;
     }
 
-    public Map<Integer, Double> getTempiDiElaborazione(Ordine[] ordini) {
+    public Map<Integer, Double> getTempiDiProcessamento(Ordine[] ordini) {
 
         //double [] ritardiResult = new double[sequenzaFogli.size()];
         Map<Integer, Double> mapResult = new HashMap<>();
 
         List<Ordine> ordiniPrimoFoglio = getOrdiniByFoglio(ordini, sequenzaFogli.get(0));
 
-        mapResult.put(sequenzaFogli.get(0), sumTempiElaborazione(ordiniPrimoFoglio));
+        mapResult.put(sequenzaFogli.get(0), sumTempiLavorazione(ordiniPrimoFoglio));
 
         for (int i = 1; i < sequenzaFogli.size(); i++) {
             List<Ordine> ordiniPerFoglio = getOrdiniByFoglio(ordini, sequenzaFogli.get(i));
             //ritardiResult[i] = ritardiResult[i-1] + sumTempiElaborazione(ordiniPerFoglio);
-            double tempoElaborazionePrecedente = mapResult.get(sequenzaFogli.get(i - 1));
+            double tempoProcessamentoPrecedente = mapResult.get(sequenzaFogli.get(i - 1));
 
-            mapResult.put(sequenzaFogli.get(i), tempoElaborazionePrecedente + sumTempiElaborazione(ordiniPerFoglio));
+            mapResult.put(sequenzaFogli.get(i), tempoProcessamentoPrecedente + sumTempiLavorazione(ordiniPerFoglio));
         }
         return mapResult;
 
@@ -191,7 +191,11 @@ public class Individual {
         for (int i = 0; i < vettore.length; i++) {
             output += this.vettore[i];
         }
-        return output + "  - fogli: "+getFogliUsati()+ "  - "+(this.zombie ? "zombie" : "alive") +" - "+(this.nospace ? "no space" : "space ok");
+        return output + "  - fogli: "+getFogliUsati()+ "  - "+(this.SprecoNonAccettabile ? "SprecoNonAccettabile" : "SprecoAccettabile") +" - "+(this.nospace ? "no space" : "space ok");
+    }
+
+    Map<Integer, Double> getTempiDiElaborazione(List<Ordine> ordini) {
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
 }

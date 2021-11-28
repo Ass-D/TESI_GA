@@ -4,10 +4,6 @@
  */
 package it.unina.tesi.bps.exceptions;
 
-/**
- *
- * @author sommovir
- */
 public class InvalidAttemptToExportException extends Exception{
 
     public InvalidAttemptToExportException() {

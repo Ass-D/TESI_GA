@@ -9,10 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.fusesource.jansi.AnsiColors;
 
-/**
- *
- * @author sommovir
- */
+
 public class FoglioType {
 
     public final double H; //altezza del foglio

@@ -7,10 +7,11 @@ import java.util.List;
 import java.util.Random;
 import javax.swing.JOptionPane;
 
-/* La popolazione � un insieme di individui e la classe popolazione viene utilizzata per 
+/* La popolazione è un insieme di individui e la classe popolazione viene utilizzata per 
 	* operazioni a livello di gruppo da eseguire sugli individui (come la selezione di
 	* individui a cui applicare il crossover o la mutazione). 
  */
+
 //Creiamo la classe Population e inizializzaimo una popolazione vuota definendo la dimensione
 public class Population {
 
@@ -37,7 +38,7 @@ public class Population {
         }
     }
 
-    //Otteniamo gli individui dalla popolazione 	/**
+    //Otteniamo gli individui dalla popolazione 
     public Individual[] getIndividuals() {
         return this.population;
     }
@@ -53,7 +54,7 @@ public class Population {
     }
 
     /*Cerchiamo un individuo nella popolazione attraverso la sua fitness, ordinando la popolazione 
-	*  attraverso la fitness e facciamoci restituire l'individuo pi� adatto (fittest)
+      attraverso la fitness e facciamoci restituire l'individuo più adatto (fittest)
      */
     public Individual getFittest(int offset) {
 
@@ -114,14 +115,15 @@ public class Population {
     }
 
     /**
-     * Calcola il quantitativo minimo di fogli usato dai migliori individui.
-     * Elimina tutti gli individui che usano più fogli del quantitativo minimo.
+     * Calcoliamo il quantitativo minimo di fogli usato dai migliori individui.
+     * Eliminiamo tutti gli individui che usano più fogli del quantitativo minimo.
      */
-    public void purge() {
+    public void select() {
         int minFogli = 1000;
         int cromoLenght = population[0].getVettoreLength();
         int originalSize = population.length;
-        //trova il minimo consumo di fogli dalla popolazione che rispetta il vincolo degli spazi
+        
+//troviamo gli individui che utilizzano il numero minimo di fogli dalla popolazione e che rispettano il vincolo degli spazi
         for (Individual individual : population) {
             if (individual.isNospace()) {
                 continue;
@@ -132,61 +134,60 @@ public class Population {
             }
         }
         if (Main.debug) {
-            System.out.println("BEFORE PURGE, min = " + minFogli);
+            System.out.println("BEFORE SELECT, min = " + minFogli);
         }
-        //setta a zombie=true tutti gli individui che usano più fogli del minimo trovato
+        //Settiamo a SprecoNonAccettabile=true tutti gli individui che usano più fogli del minimo trovato
         for (Individual individual : population) {
             if (individual.getFogliUsati() > minFogli) {
-                individual.setZombie(true);
+                individual.setSprecoNonAccettabile(true);
             }
             if (Main.debug) {
                 System.out.println(individual);
             }
         }
 
-        //creiamo una lista vuota dei sopravvissuti e ci mettiamo tutti gli 
-        //individui che non sono zombie e che rispettano il vincolo sulle aree
+        //Creiamo una lista vuota dei sopravvissuti e ci mettiamo tutti gli 
+        //individui che non sono SprecoNonAccettabile e che rispettano il vincolo sulle aree
         List<Individual> survivors = new LinkedList<>();
         for (Individual individual : population) {
-            if (!individual.isZombie() && !individual.isNospace()) {
+            if (!individual.isSprecoNonAccettabile() && !individual.isNospace()) {
                 survivors.add(individual);
             }
         }
         if (Main.debug) {
             System.out.println("SURVIROS SIZE: " + survivors.size());
-            System.out.println("AFTER PURGE");
+            System.out.println("AFTER SELECT");
             for (Individual individual : survivors) {
                 System.out.println(individual);
             }
         }
 
-        //inizia la fase di ripopolamento per tornare a 100 unità di individui
+        //Iniziamo la fase di ripopolamento per tornare a 100 unità di individui
         if (Main.debug) {
             System.out.println("REFILLING..");
         }
-        //rip = il totale degli individui mancanti. 
-        int rip = originalSize - survivors.size();
-        //cloning the winners
-        //calcolo la percentuale di elementi da clonare
-        int n_clones = (int) (rip / 1.5); //75%
+        //Calcoliamo il totale degli individui mancanti = missing. 
+        int missing = originalSize - survivors.size();
+        //cloning i sopravvissuti e calcoliamo la percentuale di elementi da clonare
+        int n_clones = (int) (missing / 1.5); //75%
         if (Main.debug) {
             System.out.println("Cloning " + n_clones + " individui");
         }
-        //prepara una lista dove inserire tutti gli individui da clonare
+        //prepariamo una lista dove inserire tutti gli individui da clonare
         List<Individual> clones = new LinkedList<>();
         for (int i = 0; i < n_clones; i++) {
             int random = survivors.size() == 1 ? 0 : nexRandomInRange(0, survivors.size() - 1);
-            //aggiunge ai cloni un invididuo preso a caso tra i sopravvissuti. 
+            //aggiungiamo ai cloni un invididuo preso a caso tra i sopravvissuti. 
             clones.add(new Individual(survivors.get(random).getvettore()));
         }
-        //aggiunge i cloni a tutti i sopravvisuti
+        //aggiungiamo i cloni a tutti i sopravvisuti
         survivors.addAll(clones);
-        //end cloning the winners
-        //Raggiunge la quota finale di individui generando a caso i rimanenti
+     
+        //Raggiungiamo la quota finale di individui generando a caso i rimanenti
         if (Main.debug) {
-            System.out.println("Creating " + (rip - n_clones) + " new Individual !");
+            System.out.println("Creating " + (missing - n_clones) + " new Individual !");
         }
-        for (int i = 0; i < rip - n_clones; i++) {
+        for (int i = 0; i < missing - n_clones; i++) {
             survivors.add(new Individual(cromoLenght));
         }
 

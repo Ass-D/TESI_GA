@@ -7,10 +7,6 @@ package it.unina.tesi.bps;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author sommovir
- */
 public class TesterClass {
 
     public static void main(String[] args) {

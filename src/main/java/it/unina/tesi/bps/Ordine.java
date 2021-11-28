@@ -4,11 +4,6 @@
  */
 package it.unina.tesi.bps;
 
-
-/**
- *
- * @author sommovir
- */
 public class Ordine {
     
     public double h; //altezza dell'ordine
@@ -31,11 +26,11 @@ public class Ordine {
         return this.h * this.w;
     }
     
-    public final double tempoElaborazioneRetinatura(){
+    public final double tempoLavorazioneRetinatura(){
         return area() *retinatura;
     }
     
-    public final double indiceDiPriotita(){
+    public final double indiceDiPriorita(){
         return this.pesoOrdine / dueDate;
     }
 
@@ -43,7 +38,5 @@ public class Ordine {
     public String toString() {
         return "Ordine: h = "+h+", w = "+w+", pesoOrdine= "+pesoOrdine+", dueDate = "+dueDate+", retinatura = "+retinatura;
     }
-    
-    
     
 }

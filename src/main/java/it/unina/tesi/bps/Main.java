@@ -136,7 +136,6 @@ public class Main {
 //Stampiamo l'individuo più in forma 
                                 Individual fittest = population.getFittest(0);
                                 if (fittest == null) {
-//                                    System.out.println("ehm..");
                                     continue;
                                 }
                                 System.out.println(
@@ -204,10 +203,7 @@ public class Main {
 
                             Exporter.getInstance().export("\n====================================================");
 
-                            ////ASSUNTA: MOSTRARE come output anche lo spreco dei fogli 1 e 2 della soluzione migliore    
-                            //    System.out.println("spreco foglio 1:" +sprecoFoglio1 );
-                            //    System.out.println("spreco foglio 2:" +sprecoFoglio2 );  
-                            //ASSUNTA: DOMANDA : perchè abbiamo messo uguale a -2 ??     
+                    
                             double minimoCosto = -2;
                             try {
                                 minimoCosto = ga.minimoCosto(population, ordini.toArray(new Ordine[ordini.size()]), areaFoglio, foglio.getAlpha(), foglio.getBeta());
