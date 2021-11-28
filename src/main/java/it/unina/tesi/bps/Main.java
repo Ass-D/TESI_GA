@@ -17,6 +17,7 @@ public class Main {
 
     public static int maxGenerations = 1000; // massimo num. di iterazioni per la terminazione
     public static final String version = "1.0";
+    public static boolean verbose = false;
 //    public static double foglio_W = 203; //larghezza del foglio
 //    public static double alpha = 451.6; //costo spreco
 //    public static double beta = 82.5; //costo penalità

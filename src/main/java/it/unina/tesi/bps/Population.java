@@ -121,6 +121,7 @@ public class Population {
         int minFogli = 1000;
         int cromoLenght = population[0].getVettoreLength();
         int originalSize = population.length;
+        //trova il minimo consumo di fogli dalla popolazione che rispetta il vincolo degli spazi
         for (Individual individual : population) {
             if (individual.isNospace()) {
                 continue;
@@ -131,12 +132,16 @@ public class Population {
             }
         }
         System.out.println("BEFORE PURGE, min = " + minFogli);
+        //setta a zombie=true tutti gli individui che usano più fogli del minimo trovato
         for (Individual individual : population) {
             if (individual.getFogliUsati() > minFogli) {
                 individual.setZombie(true);
             }
             System.out.println(individual);
         }
+
+        //creiamo una lista vuota dei sopravvissuti e ci mettiamo tutti gli 
+        //individui che non sono zombie e che rispettano il vincolo sulle aree
         List<Individual> survivors = new LinkedList<>();
         for (Individual individual : population) {
             if (!individual.isZombie() && !individual.isNospace()) {
@@ -151,29 +156,38 @@ public class Population {
         for (Individual individual : survivors) {
             System.out.println(individual);
         }
+        //inizia la fase di ripopolamento per tornare a 100 unità di individui
         System.out.println("REFILLING..");
+        //rip = il totale degli individui mancanti. 
         int rip = originalSize - survivors.size();
         //cloning the winners
-
-        int n_clones = (int)(rip / 1.5);
-        System.out.println("Cloning "+n_clones+" individui");
+        //calcolo la percentuale di elementi da clonare
+        int n_clones = (int) (rip / 1.5); //75%
+        System.out.println("Cloning " + n_clones + " individui");
+        //prepara una lista dove inserire tutti gli individui da clonare
         List<Individual> clones = new LinkedList<>();
         for (int i = 0; i < n_clones; i++) {
-            int random = survivors.size() == 1 ? 0 : nexRandomInRange(0, survivors.size()-1);
+            int random = survivors.size() == 1 ? 0 : nexRandomInRange(0, survivors.size() - 1);
+            //aggiunge ai cloni un invididuo preso a caso tra i sopravvissuti. 
             clones.add(new Individual(survivors.get(random).getvettore()));
         }
+        //aggiunge i cloni a tutti i sopravvisuti
         survivors.addAll(clones);
         //end cloning the winners
+        //Raggiunge la quota finale di individui generando a caso i rimanenti
         System.out.println("Creating " + (rip - n_clones) + " new Individual !");
         for (int i = 0; i < rip - n_clones; i++) {
             survivors.add(new Individual(cromoLenght));
         }
 
         this.population = survivors.toArray(new Individual[survivors.size()]);
-        
+
         System.out.println("AFTER GIGA CLONING");
-        for (Individual individual : survivors) {
-            System.out.println(individual);
+        if (Main.verbose) {
+            for (Individual individual : survivors) {
+
+                System.out.println(individual);
+            }
         }
         System.out.println("---------------------------------------------------");
 

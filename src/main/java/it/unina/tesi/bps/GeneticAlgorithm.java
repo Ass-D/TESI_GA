@@ -366,19 +366,43 @@ public class GeneticAlgorithm {
 
         Individual fittest = population.getFittest(0);
 
-        //int[] nessunFoglio = fittest.getOrdiniByIndex(0);
-        int[] foglio1 = fittest.getOrdiniByIndex(1);
-        int[] foglio2 = fittest.getOrdiniByIndex(2);
-        int[] foglio3 = fittest.getOrdiniByIndex(3);
-        int[] foglio4 = fittest.getOrdiniByIndex(4);
+            //  int[] vettore = individual.getvettore();
+        //int[] nessunFoglio = individual.getOrdiniByIndex(0);
+        int[] foglio1 = null;
+        int[] foglio2 = null;
+        int[] foglio3 = null;
+        int[] foglio4 = null;
+
+        if(fittest == null){
+            return 0;
+        }
+//        System.out.println(" <<<<individual : "+individual);
+        List<Integer> sequenzaFogli = fittest.getSequenzaFogli();
+
+        int numFogli = sequenzaFogli.size();
+
+        foglio1 = fittest.getOrdiniByIndex(sequenzaFogli.get(0));
+        foglio2 = numFogli < 2 ? null : fittest.getOrdiniByIndex(sequenzaFogli.get(1));
+        foglio3 = numFogli < 3 ? null : fittest.getOrdiniByIndex(sequenzaFogli.get(2));
+        foglio4 = numFogli < 4 ? null : fittest.getOrdiniByIndex(sequenzaFogli.get(3));
 
         double areaOrdiniFoglio1 = calculateAreaOrdiniByIndex(foglio1, ordini);
-        double areaOrdiniFoglio2 = calculateAreaOrdiniByIndex(foglio2, ordini);
-        double areaOrdiniFoglio3 = calculateAreaOrdiniByIndex(foglio3, ordini);
-        double areaOrdiniFoglio4 = calculateAreaOrdiniByIndex(foglio4, ordini);
+        double areaOrdiniFoglio2 = numFogli < 2 ? 0 : calculateAreaOrdiniByIndex(foglio2, ordini);
+        double areaOrdiniFoglio3 = numFogli < 3 ? 0 : calculateAreaOrdiniByIndex(foglio3, ordini);
+        double areaOrdiniFoglio4 = numFogli < 4 ? 0 : calculateAreaOrdiniByIndex(foglio4, ordini);
 
         if (areaOrdiniFoglio1 > areaFoglio || areaOrdiniFoglio2 > areaFoglio || areaOrdiniFoglio3 > areaFoglio || areaOrdiniFoglio4 > areaFoglio) {
+//            System.out.println("areaOrdiniFoglio1  =  "+areaOrdiniFoglio1);
+//            System.out.println("areaFoglio  =  "+areaFoglio);
+//            System.out.println("============================================");
+//            System.out.println("areaOrdiniFoglio2  =  "+areaOrdiniFoglio2);
+//            System.out.println("areaFoglio  =  "+areaFoglio);
+//            System.out.println("============================================");
+//            JOptionPane.showMessageDialog(null, "NOOOO");
+            fittest.setNospace(true);
             throw new SoluzioneImpossibileException("La somma delle aree degli ordini non può eccedere l'area del foglio");
+        } else {
+//            System.out.println("********** VINCOLI OK ****************");
         }
 
         double sprecoFoglio1 = (areaFoglio - areaOrdiniFoglio1) / areaFoglio;
@@ -386,150 +410,96 @@ public class GeneticAlgorithm {
         double sprecoFoglio3 = (areaFoglio - areaOrdiniFoglio3) / areaFoglio;
         double sprecoFoglio4 = (areaFoglio - areaOrdiniFoglio4) / areaFoglio;
 
+        if (sprecoFoglio2 == 1) {
+            sprecoFoglio2 = 0;
+        }
+        if (sprecoFoglio3 == 1) {
+            sprecoFoglio3 = 0;
+        }
+        if (sprecoFoglio4 == 1) {
+            sprecoFoglio4 = 0;
+        }
+
+////ASSUNTA:  VORREI INSERIRE ANCHE QUESTO VINCOLO come quello sopra
+//        if (sprecoFoglio1 >= 0.25 || sprecoFoglio2 >= 0.25 || sprecoFoglio3 >= 0.25) {
+////            JOptionPane.showMessageDialog(null, "DUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+//            individual.setZombie(true);
+//
+//            throw new SoluzioneImpossibileException("L indice di utilizzo del foglio è troppo basso");
+//        }
+
         double costoSpreco = alpha * (sprecoFoglio1 + sprecoFoglio2 + sprecoFoglio3 + sprecoFoglio4);
 
-        double minDueDateFoglio1 = calculateMinExpirationDate(foglio1, ordini);
-        double minDueDateFoglio2 = calculateMinExpirationDate(foglio2, ordini);
-        double minDueDateFoglio3 = calculateMinExpirationDate(foglio3, ordini);
-        double minDueDateFoglio4 = calculateMinExpirationDate(foglio4, ordini);
+        double minDueDateFoglio1 = calculateMinExpirationDate(foglio1,ordini);
+        double minDueDateFoglio2 = numFogli < 2 ? 0 : calculateMinExpirationDate(foglio2, ordini);
+        double minDueDateFoglio3 = numFogli < 3 ? 0 : calculateMinExpirationDate(foglio3, ordini);
+        double minDueDateFoglio4 = numFogli < 4 ? 0 : calculateMinExpirationDate(foglio4, ordini);
 
         double tempoElaborazioneFoglio1 = getSommaTempoRetinatura(foglio1, ordini);
-        double tempoElaborazioneFoglio2 = getSommaTempoRetinatura(foglio2, ordini);
-        double tempoElaborazioneFoglio3 = getSommaTempoRetinatura(foglio3, ordini);
-        double tempoElaborazioneFoglio4 = getSommaTempoRetinatura(foglio4, ordini);
+        double tempoElaborazioneFoglio2 = numFogli < 2 ? 0 : getSommaTempoRetinatura(foglio2, ordini);
+        double tempoElaborazioneFoglio3 = numFogli < 3 ? 0 : getSommaTempoRetinatura(foglio3, ordini);
+        double tempoElaborazioneFoglio4 = numFogli < 4 ? 0 : getSommaTempoRetinatura(foglio4, ordini);
 
+        //qva
+//        if(individual.getvettore()[0] == 1){
+//            double c1 = tempoElaborazioneFoglio1; asdoòhashd
+//        }
+        // TEMPI DI COMPLETAMENTO DEI FOGLI
         double tempoCompletamentoF1 = tempoElaborazioneFoglio1;
         double tempoCompletamentoF2 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2;
         double tempoCompletamentoF3 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3;
         double tempoCompletamentoF4 = tempoElaborazioneFoglio1 + tempoElaborazioneFoglio2 + tempoElaborazioneFoglio3 + tempoElaborazioneFoglio4;
 
+// ASSUNTA - IL CONCETTO DELLA MAPPA METTO A COMMENTO PERCHè DEVO VALUTARE QUALE CONCETTO MI AIUTA DI PIù. 
+// SE DECIDERE IO LA SEQUENZA SEMPRE di 1-2-3-4 COME FATTO ALL'INIZIO O FARLA VALUTARE ALL' ALGORITMO
+        /*     Map<Integer, Double> tempiElabMap = individual.getTempiDiElaborazione(ordini);
+
+        //TODO RENDERE GENERICA QUESTA PARTE 
+        double ritardoFoglio1 = 0;
+        double ritardoFoglio2 = 0;
+        double ritardoFoglio3 = 0;
+        double ritardoFoglio4 = 0;
+        if (tempiElabMap.containsKey(1)) {
+            ritardoFoglio1 = tempiElabMap.get(1) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(1) - minDueDateFoglio1 : 0;
+        }
+        if (tempiElabMap.containsKey(2)) {
+            ritardoFoglio2 = tempiElabMap.get(2) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(2) - minDueDateFoglio1 : 0;
+        }
+        if (tempiElabMap.containsKey(3)) {
+            ritardoFoglio3 = tempiElabMap.get(3) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(3) - minDueDateFoglio1 : 0;
+        }
+        if (tempiElabMap.containsKey(4)) {
+            ritardoFoglio4 = tempiElabMap.get(4) - minDueDateFoglio1 >= 0 ? tempiElabMap.get(4) - minDueDateFoglio1 : 0;
+        }
+         */
+        // RITARDO FOGLI
         double ritardoFoglio1 = tempoCompletamentoF1 - minDueDateFoglio1 >= 0 ? tempoCompletamentoF1 - minDueDateFoglio1 : 0;
         double ritardoFoglio2 = tempoCompletamentoF2 - minDueDateFoglio2 >= 0 ? tempoCompletamentoF2 - minDueDateFoglio2 : 0;
         double ritardoFoglio3 = tempoCompletamentoF3 - minDueDateFoglio3 >= 0 ? tempoCompletamentoF3 - minDueDateFoglio3 : 0;
         double ritardoFoglio4 = tempoCompletamentoF4 - minDueDateFoglio4 >= 0 ? tempoCompletamentoF4 - minDueDateFoglio4 : 0;
 
         double sommatoriaIndicePriority1 = getSommaIndicePriorita(foglio1, ordini);
-        double sommatoriaIndicePriority2 = getSommaIndicePriorita(foglio2, ordini);
-        double sommatoriaIndicePriority3 = getSommaIndicePriorita(foglio3, ordini);
-        double sommatoriaIndicePriority4 = getSommaIndicePriorita(foglio4, ordini);
+        double sommatoriaIndicePriority2 = numFogli < 2 ? 0 : getSommaIndicePriorita(foglio2, ordini);
+        double sommatoriaIndicePriority3 = numFogli < 3 ? 0 : getSommaIndicePriorita(foglio3, ordini);
+        double sommatoriaIndicePriority4 = numFogli < 4 ? 0 : getSommaIndicePriorita(foglio4, ordini);
 
         double costoPenalty = beta * (ritardoFoglio1 * sommatoriaIndicePriority1
                 + ritardoFoglio2 * sommatoriaIndicePriority2
                 + ritardoFoglio3 * sommatoriaIndicePriority3
                 + ritardoFoglio4 * sommatoriaIndicePriority4);
 
-        return costoSpreco + costoPenalty;
+////Calcoliamo la fitness
+        double fitness = costoSpreco + costoPenalty;
 
-//        int[] Fittest = population.getFittest(0).getvettore();
-//
-//        int[] primoFoglio = new int[Fittest.length];
-//        for (int i = 0; i < Fittest.length; i++) {
-//            if (Fittest[i] != 0 && Fittest[i] != 2) {
-//                primoFoglio[i] = Fittest[i];
-//            }
-//        }
-//
-//        int[] secondoFoglio = new int[Fittest.length];
-//        for (int i = 0; i < Fittest.length; i++) {
-//            if (Fittest[i] != 0 && Fittest[i] != 1) {
-//                secondoFoglio[i] = Fittest[i];
-//            }
-//        }
-        // FOGLIO 1
-//        double[] tf1 = new double[vettore.length]; //tempo figurato1 AGV1
-//        double cumulata1 = 0;
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv1[i] == 1) {
-//                tf1[i] = tp[i] * w[i] + cumulata1;
-//                cumulata1 = tf1[i];
-//            }
-//        }
-//
-//        double[] tf2 = new double[vettore.length]; //tempo figurato2 AGV1
-//        double cumulata2 = 0;
-//        for (int i = 0; i < vettore.length; i++) {
-//            if (agv1[i] == 2) {
-//                tf2[i] = tp[i] * w[i] + cumulata2;
-//                cumulata2 = tf2[i];
-//            }
-//        }
-//        double[] t1 = new double[Fittest.length]; //tempo di complet1 AGV1
-//        double cumulata1 = 0;
-//        for (int i = 0; i < Fittest.length; i++) {
-//            if (primoFoglio[i] == 1) {
-//                t1[i] = tp[i] + cumulata1;
-//                cumulata1 = t1[i];
-//            }
-//        }
-//
-//        double massimo1 = t1[0]; //massimo dei tempi di complet1 AGV1
-//        for (int i = 0; i < Fittest.length; i++) {
-//            if (t1[i] > massimo1) {
-//                massimo1 = t1[i];
-//            }
-//        }
-//
-//        double[] t2 = new double[Fittest.length]; //tempo di complet2 AGV1
-//        double cumulata2 = 0;
-//        for (int i = 0; i < Fittest.length; i++) {
-//            if (primoFoglio[i] == 2) {
-//                t2[i] = tp[i] + cumulata2;
-//                cumulata2 = t2[i];
-//            }
-//        }
-//
-//        double massimo2 = t2[0]; //massimo dei tempi di complet2 AGV1
-//        for (int i = 0; i < Fittest.length; i++) {
-//            if (t2[i] > massimo2) {
-//                massimo2 = t2[i];
-//            }
-//        }
-//
-//        double tcagv1 = massimo1 + massimo2 + tr; //tempo di completamento agv1 
-//
-//        //AGV2
-//        double[] t3 = new double[Fittest.length]; //tempo di complet3 AGV2
-//        double cumulata3 = 0;
-//        for (int i = 0; i < Fittest.length; i++) {
-//            if (secondoFoglio[i] == 3) {
-//                t3[i] = tp[i] + cumulata3;
-//                cumulata3 = t3[i];
-//            }
-//        }
-//
-//        double massimo3 = t3[0]; //massimo dei tempi di complet3 AGV2
-//        for (int i = 0; i < Fittest.length; i++) {
-//            if (t3[i] > massimo3) {
-//                massimo3 = t3[i];
-//            }
-//        }
-//
-//        double[] t4 = new double[Fittest.length]; //tempo di complet4 AGV2
-//        double cumulata4 = 0;
-//        for (int i = 0; i < Fittest.length; i++) {
-//            if (secondoFoglio[i] == 4) {
-//                t4[i] = tp[i] + cumulata4;
-//                cumulata4 = t4[i];
-//            }
-//        }
-//
-//        double massimo4 = t4[0]; //massimo dei tempi di complet4 AGV2
-//        for (int i = 0; i < Fittest.length; i++) {
-//            if (t4[i] > massimo4) {
-//                massimo4 = t4[i];
-//            }
-//        }
-//
-//        double tcagv2 = massimo3 + massimo4 + tr; //tempo di completamento agv2
-//
-//        double fitness1 = 0;
-//        if (tcagv1 > tcagv2) {
-//            fitness1 = tcagv1;
-//        } else {
-//            fitness1 = tcagv2;
-//        }
-//
-//        return fitness1;
+////Invertiamo la fitness (in modo da averla decrescente)
+        fitness = 1 / fitness;
+//        System.out.println("\n\n FITNESS ==== >>  "+fitness);
+
+////Memorizziamo la fitness
+       // fittest.setFitness(fitness);
+        
+        return fitness;
+
     }
 
 }
